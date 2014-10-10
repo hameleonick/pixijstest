@@ -9,8 +9,8 @@
 
     canvas
     {
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100%  !important;
         top:0;
         left:0;
         position: absolute;
@@ -21,164 +21,205 @@
 </style>
 <body style="margin: 0; padding: 0; width: 100%; height: 100%">
 
-<script type="text/javascript">
+<script type="text/javascript">setTimeout(function(){
+//    alert(document.documentElement.offsetHeight)
+//    alert("window.screenTop:"+window.screenTop);
+//    alert("screen.height:"+screen.height);
+//    alert("window.devicePixelRatio:"+window.devicePixelRatio);
+//    alert("screen.height / window.devicePixelRatio - window.screenTop-"+(screen.height / window.devicePixelRatio - window.screenTop));
+},1000)
 
 var heightParam = (innerHeight/screen.availHeight);
 var widthtParam = (innerWidth/screen.availWidth);
-var renderer = new PIXI.CanvasRenderer(screen.availWidth,screen.availHeight)//
+var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.innerHeight)//
 
     document.body.appendChild(renderer.view);
 
-    var stage = new PIXI.Stage;
+    var stage = new PIXI.Stage();
 
 
 
     var elements = [
-
-
-        {
-            parent:stage,
-            element: {
-                        from:"fromImage",
-                        content:"./img/table_wh_bg.png",
-                        params:{
-                            position:{x:80,y:30},
-                            scale:{x:0.45/widthtParam,y:0.45/heightParam}
-                            //rotation : 1.6
-                        }
-            }
-
-        },
-
         {
             parent:stage,
             element: {
                 from:"fromImage",
-                content:"./img/slider/slider_back.png",
+                content:"./img/layout.png",
                 params:{
-                    position:{x:65,y:screen.availHeight-60},
-                    scale:{x:130,y:0.45/heightParam}
-                    //rotation : 1.6
-                }
-            }
-        },
-//
-        {
-            parent:stage,
-            element: {
-                from:"fromImage",
-                content:"./img/slider/slider_glow0.png",
-                params:{
-                    position:{x:71,y:screen.availHeight-60},
-                    scale:{x:1,y:0.45/heightParam}
-                    //rotation : 1.6
-                }
-            }
-        },
-
-        {
-            parent:stage,
-            element: {
-                from:"fromImage",
-                content:"./img/slider/slider_glow2.png",
-                params:{
-                    position:{x:71,y:screen.availHeight-60},
-                    scale:{x:1,y:0.45/heightParam},
-                    visible: false
-                    //rotation : 1.6
-                }
-            }
-        },
-
-        {
-            parent:stage,
-            element: {
-                from:"fromImage",
-                content:"./img/slider/slider.png",
-                params:{
-                    position:{x:95,y:screen.availHeight-60},
-                    scale:{x:0.45/widthtParam,y:0.45/heightParam},
-                    interactive:true,
-                    buttonMode: true,
-                   anchor:{x:0.5, y:0}
-                }
-            },
-            eventListeners:createEventlistenersForSlider
-        },
-
-        {
-            parent:stage,
-            element: {
-                from:"fromImage",
-                content:"./img/slider/sliderback_left.png",
-                params:{
-                    position:{x:20,y:screen.availHeight-60},
-                    scale:{x:0.45/widthtParam,y:0.45/heightParam}
+                    position:{x:0,y:0},
+                    scale:{x:1,y:1},
+                    height: window.innerHeight, width: window.innerWidth
+//                    texture: {height: 480, width: 320}
                     //rotation : 1.6
                 }
             },
-            childrens:[{
-                element: {
-                    from:"fromImage",
-                    content:"./img/slider/slider_minus.png",
-                    params:{
-                        position:{x:0,y:0},
-                        //scale:{x:0.45/widthtParam,y:0.45/heightParam}
-                        //rotation : 1.6
-                    }
-                }
-            }]
-        },
+            childrens:[
 
-
-        //
-
-
-
-        {
-            parent:stage,
-            element: {
-                from:"fromImage",
-                content:"./img/slider/sliderback_right.png",
-                params:{
-                    position:{x:320,y:screen.availHeight-60},
-                    scale:{x:0.45/widthtParam,y:0.45/heightParam}
-                    //rotation : 1.6
-                }
-            },
-            childrens:[{
-                element: {
-                    from:"fromImage",
-                    content:"./img/slider/slider_plus.png",
-                    params:{
-                        position:{x:-10,y:0},
-                        //scale:{x:0.45/widthtParam,y:0.45/heightParam}
-                        //rotation : 1.6
-                    }
-                }
-            }]
-
-        },
-
-        {
-            parent:stage,
-            element: {from:"fromImage", content:"./img/poker_chip.png",
-                params:
                 {
-                    position:{x:50,y:50},
-                    scale:{x:0.2/widthtParam,y:0.2/heightParam},
-                    interactive:true,
-                    buttonMode: true,
-                    anchor:{x:0.5, y:0.5}
-                }},
-            eventListeners: createEventlistenersForChip
+                    element: {from:"fromImage", content:"./img/poker_chip.png",
+                        params:
+                        {
+                            position:{x:50,y:50},
+                            scale:{x:0.2,y:0.2},
+                            interactive:true,
+                            buttonMode: true,
+                            anchor:{x:0.5, y:0.5},
+                            //height: 100, width: 100
+                        }},
+                    eventListeners: createEventlistenersForChip
+//
+                }
 
-        }
+            ]
+        },
+
+//        {
+//            parent:stage,
+//            element: {
+//                        from:"fromImage",
+//                        content:"./img/table_wh_bg.png",
+//                        params:{
+//                            position:{x:80,y:30},
+//                            scale:{x:0.45/widthtParam,y:0.45/heightParam}
+//                            //rotation : 1.6
+//                        }
+//            }
+//
+//        },
+
+//        {
+//            id:"black_slider",
+//            parent:stage,
+//            element: {
+//                from:"fromImage",
+//                content:"./img/slider/slider_back.png",
+//                params:{
+//                    position:{x:0,y:0},
+//                    scale:{x:screen.availWidth,y:1}
+//                    //rotation : 1.6
+//                }
+//            },
+//            pixiSprite: {}
+//        },
+//
+//        {
+//            parent:stage,
+//            element: {
+//                from:"fromImage",
+//                content:"./img/slider/slider_glow0.png",
+//                params:{
+//                    position:{x:71,y:screen.availHeight-60},
+//                    scale:{x:1,y:0.45/heightParam}
+//                    //rotation : 1.6
+//                }
+//            }
+//        },
+//
+//        {
+//            parent:stage,
+//            element: {
+//                from:"fromImage",
+//                content:"./img/slider/slider_glow2.png",
+//                params:{
+//                    position:{x:71,y:screen.availHeight-60},
+//                    scale:{x:1,y:0.45/heightParam},
+//                    visible: false
+//                    //rotation : 1.6
+//                }
+//            }
+//        },
+//
+//        {
+//            parent:stage,
+//            element: {
+//                from:"fromImage",
+//                content:"./img/slider/slider.png",
+//                params:{
+//                    position:{x:95,y:screen.availHeight-60},
+//                    scale:{x:0.45/widthtParam,y:0.45/heightParam},
+//                    interactive:true,
+//                    buttonMode: true,
+//                   anchor:{x:0.5, y:0}
+//                }
+//            },
+//            eventListeners:createEventlistenersForSlider
+//        },
+//
+//        {
+//            parent:stage,
+//            element: {
+//                from:"fromImage",
+//                content:"./img/slider/sliderback_left.png",
+//                params:{
+//                    position:{x:20,y:screen.availHeight-60},
+//                    scale:{x:0.45/widthtParam,y:0.45/heightParam}
+//                    //rotation : 1.6
+//                }
+//            },
+//            childrens:[{
+//                element: {
+//                    from:"fromImage",
+//                    content:"./img/slider/slider_minus.png",
+//                    params:{
+//                        position:{x:0,y:0},
+//                        scale:{x:1, y:1}
+//                        //scale:{x:0.45/widthtParam,y:0.45/heightParam}
+//                        //rotation : 1.6
+//                    }
+//                }
+//            }]
+//        },
+//
+//
+//        //
+//
+//
+//
+//        {
+//            parent:stage,
+//            element: {
+//                from:"fromImage",
+//                content:"./img/slider/sliderback_right.png",
+//                params:{
+//                    position:{x:320,y:screen.availHeight-60},
+//                    scale:{x:0.45/widthtParam,y:0.45/heightParam}
+//                    //rotation : 1.6
+//                }
+//            },
+//            childrens:[{
+//                element: {
+//                    from:"fromImage",
+//                    content:"./img/slider/slider_plus.png",
+//                    params:{
+//                        position:{x:-10,y:0},
+//                        //scale:{x:0.45/widthtParam,y:0.45/heightParam}
+//                        //rotation : 1.6
+//                    }
+//                }
+//            }]
+//
+//        },
+//
+//        {
+//            parent:stage,
+//            element: {from:"fromImage", content:"./img/poker_chip.png",
+//                params:
+//                {
+//                    position:{x:260,y:370},
+//                    scale:{x:0.175/widthtParam,y:0.175/heightParam},
+//                    interactive:true,
+//                    buttonMode: true,
+//                    anchor:{x:0.5, y:0.5}
+//                }},
+//            eventListeners: createEventlistenersForChip
+//
+//        }
 
 
     ]
-
-    stage.setBackgroundColor("0xCCCCCC");
+//renderer.view.style.background = "#CCCCCC"
+    stage.setBackgroundColor(0xCCCCCC);
+//stage.setBackgroundColor("#CCCCCC")
     elementsFactory(elements);
 
     requestAnimationFrame(animate);
@@ -193,6 +234,33 @@ var renderer = new PIXI.CanvasRenderer(screen.availWidth,screen.availHeight)//
 
 
     function createElement(from, content, params){
+//        var standartWidth = 320;
+//        var standartHeight = 480;
+//
+//        //window.innerHeight+" "+window.innerWidth
+//        var newY = window.innerHeight * params.position.y / standartHeight;
+//        var newX = window.innerWidth * params.position.x / standartWidth;
+//
+//        var koefW = 1;
+//        var koefH = 1;
+//        if(standartWidth<window.innerWidth)
+//            koefW = standartWidth/window.innerWidth
+//        else
+//            koefW = window.innerWidth/standartWidth
+//
+//        if(standartHeight<window.innerHeight)
+//            koefH = standartHeight/window.innerHeight
+//        else
+//            koefH = window.innerHeight/standartHeight
+//
+//
+//
+//        //alert("y -" + newY)
+//        params.position.y = parseInt(newY);
+//        params.position.x = parseInt(newX);
+//
+//        params.scale.x = params.scale.x*koefW;
+//        params.scale.y = params.scale.y*koefH;
         var newTexture = PIXI.Texture[from](content);
         var sprite = new PIXI.Sprite(newTexture);
 
@@ -260,8 +328,10 @@ var renderer = new PIXI.CanvasRenderer(screen.availWidth,screen.availHeight)//
         // set the callbacks for when the mouse or a touch moves
         chip.mousemove = chip.touchmove = function(data)
         {
+
             if(this.dragging)
             {
+                console.log(this);
                 // need to get parent coords..
                 var newPosition = this.data.getLocalPosition(this.parent);
                 this.position.x = newPosition.x//-50;

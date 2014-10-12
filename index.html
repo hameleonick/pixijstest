@@ -31,6 +31,9 @@
 
 var heightParam = (innerHeight/screen.availHeight);
 var widthtParam = (innerWidth/screen.availWidth);
+console.log(PIXI.scaleModes)
+PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+//PIXI.BaseTexture.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
 var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.innerHeight)//
 
     document.body.appendChild(renderer.view);
@@ -40,7 +43,7 @@ var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.i
 
 
     var elements = [
-        {
+      /*  {
             parent:stage,
             element: {
                 from:"fromImage",
@@ -48,7 +51,7 @@ var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.i
                 params:{
                     position:{x:0,y:0},
                     scale:{x:1,y:1},
-                    height: 480, width: 320
+                    height: window.innerHeight, width: window.innerWidth
 //                    texture: {height: 480, width: 320}
                     //rotation : 1.6
                 }
@@ -71,7 +74,7 @@ var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.i
                 }
 
             ]
-        },
+        },*/
 
 //        {
 //            parent:stage,
@@ -200,20 +203,20 @@ var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.i
 //
 //        },
 //
-//        {
-//            parent:stage,
-//            element: {from:"fromImage", content:"./img/poker_chip.png",
-//                params:
-//                {
-//                    position:{x:260,y:370},
-//                    scale:{x:0.175/widthtParam,y:0.175/heightParam},
-//                    interactive:true,
-//                    buttonMode: true,
-//                    anchor:{x:0.5, y:0.5}
-//                }},
-//            eventListeners: createEventlistenersForChip
-//
-//        }
+        {
+            parent:stage,
+            element: {from:"fromImage", content:"./img/poker_chip.png",
+                params:
+                {
+                    position:{x:260,y:370},
+                    scale:{x:0.175/widthtParam,y:0.175/heightParam},
+                    interactive:true,
+                    buttonMode: true,
+                    anchor:{x:0.5, y:0.5}
+                }},
+            eventListeners: createEventlistenersForChip
+
+        }
 
 
     ]
@@ -252,7 +255,7 @@ var renderer = new PIXI.autoDetectRecommendedRenderer(window.innerWidth,window.i
 //            koefH = standartHeight/window.innerHeight
 //        else
 //            koefH = window.innerHeight/standartHeight
-//
+
 //
 //
 //        //alert("y -" + newY)

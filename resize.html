@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <script type="text/javascript" src="./js/libs/pixi.js"></script>
+</head>
+
+<style>
+
+    /*canvas*/
+    /*{*/
+        /*width: 100% !important;*/
+        /*height: 100%  !important;*/
+        /*top:0;*/
+        /*left:0;*/
+        /*position: absolute;*/
+    /*}*/
+
+
+
+</style>
+<body style="margin: 0; padding: 0; width: 100%; height: 100%">
+
+
+<script>
+
+    var standartWidth = 640;
+    var standartHeight = 960;
+
+    /*
+     *   x = 75
+     *   y = 75
+     *
+     *
+     *   detect max size of Width/Height
+     *
+     * */
+    var deviceWidth = 0;
+    var deviceHeight = 0;
+    var scaleWidthFactor;
+    var scaleHeightFactor;
+    if(navigator.userAgent.indexOf("iPhone")+1){
+        deviceWidth = screen.availWidth;
+        deviceHeight = screen.availHeight;
+
+        scaleWidthFactor = deviceWidth/standartWidth;
+        scaleHeightFactor = deviceHeight/standartHeight;
+
+    }
+    else if(navigator.userAgent.indexOf("Android")+1)
+    {
+        deviceHeight = window.innerHeight;
+        deviceWidth = window.innerWidth;
+
+        scaleWidthFactor = (deviceWidth/standartWidth)//window.devicePixelRatio;
+        scaleHeightFactor = (deviceHeight/standartHeight)//window.devicePixelRatio;
+    }
+
+    var scaleFactor = Math.max(scaleHeightFactor,scaleWidthFactor);
+
+    var renderer = new PIXI.autoDetectRecommendedRenderer(640,960);//
+    document.body.appendChild(renderer.view);
+    renderer.resize(640,960)
+
+    var stage = new PIXI.Stage();
+
+    stage.setBackgroundColor(0x0000FF);
+
+    var img_shadow = new Image();
+
+    img_shadow.src = "./img/table_shadow.png";
+
+    var tableShadowBaseTexture = new PIXI.BaseTexture(img_shadow);
+    var tableShadowTexture =  new PIXI.Texture(tableShadowBaseTexture, new PIXI.Rectangle(0, 0, 640, 960));
+    var tableShadowSprite = new PIXI.Sprite(tableShadowTexture);
+
+    tableShadowSprite.anchor.x = 0.5
+    tableShadowSprite.anchor.y = 0.5
+
+    var img_table = new Image();
+
+    img_table.src = "./img/table_top.png";
+
+    var tableBaseTexture = new PIXI.BaseTexture(img_table);
+    var tableTexture =  new PIXI.Texture(tableBaseTexture, new PIXI.Rectangle(0, 0, 640, 960));
+    var tableSprite = new PIXI.Sprite(tableTexture);
+
+    tableSprite.anchor.x = 0.5
+    tableSprite.anchor.y = 0.5
+
+    tableShadowSprite.addChild(tableSprite)
+
+    var displayObjCont = new PIXI.DisplayObjectContainer();
+    displayObjCont.position.x = 1;
+    displayObjCont.position.y = 1;
+    displayObjCont.addChild(tableShadowSprite)
+//    displayObjCont.addChild(tableSprite)
+    stage.addChild(displayObjCont)
+
+    resize()
+
+    requestAnimationFrame(animate);
+
+
+    function animate() {
+        //bunny.rotation += 0.01;
+
+        renderer.render(stage);
+
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize, false);
+    window.addEventListener('orientationchange', resize, false);
+
+    function resize()
+    {
+
+        var standartWidth = 640;
+        var standartHeight = 960;
+
+        /*
+         *   x = 75
+         *   y = 75
+         *
+         *
+         *   detect max size of Width/Height
+         *
+         * */
+        var deviceWidth = 0;
+        var deviceHeight = 0;
+        var scaleWidthFactor;
+        var scaleHeightFactor;
+        if(navigator.userAgent.indexOf("iPhone")+1){
+            deviceWidth = screen.availWidth;
+            deviceHeight = screen.availHeight;
+
+            scaleWidthFactor = deviceWidth/standartWidth;
+            scaleHeightFactor = deviceHeight/standartHeight;
+
+        }
+        else if(navigator.userAgent.indexOf("Android")+1)
+        {
+            deviceHeight = window.innerHeight;
+            deviceWidth = window.innerWidth;
+
+            scaleWidthFactor = (deviceWidth/standartWidth)//window.devicePixelRatio;
+            scaleHeightFactor = (deviceHeight/standartHeight)//window.devicePixelRatio;
+        }
+
+        var scaleDeltaMin = Math.min(scaleWidthFactor,scaleHeightFactor);
+        var scaleDeltaMax = Math.max(scaleWidthFactor,scaleHeightFactor);
+        renderer.resize(deviceWidth,deviceHeight)
+
+        displayObjCont.scale.x = scaleDeltaMin
+        displayObjCont.scale.y = scaleDeltaMin
+        displayObjCont.position.x = deviceWidth/2;
+        displayObjCont.position.y = deviceHeight/2;
+    }
+
+</script>
+
+</body>
+</html>

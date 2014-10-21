@@ -58,7 +58,7 @@
 
     var scaleFactor = Math.max(scaleHeightFactor,scaleWidthFactor);
 
-    var renderer = new PIXI.autoDetectRecommendedRenderer(640,960);//
+    var renderer = new PIXI.autoDetectRecommendedRenderer(deviceWidth,deviceHeight);//
     document.body.appendChild(renderer.view);
     renderer.resize(640,960)
 
@@ -119,22 +119,62 @@
     var sliderBackLeftTexture =  new PIXI.Texture(sliderBackLeftBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
     var sliderBackLeftSprite = new PIXI.Sprite(sliderBackLeftTexture);
 
-    sliderBackLeftSprite.position.x = -240;
-    sliderBackLeftSprite.position.y = 400;
+    sliderBackLeftSprite.position.x = 0;
+    sliderBackLeftSprite.position.y = deviceHeight;
 
-    sliderBackLeftSprite.anchor.x = 0.5
-    sliderBackLeftSprite.anchor.y = 0.5
+    sliderBackLeftSprite.anchor.x = 0
+    sliderBackLeftSprite.anchor.y = 1
+
+    sliderBackLeftSprite.scale.x = 0.5
+    sliderBackLeftSprite.scale.y = 0.5
+
+
+    var img_slider_back_right = new Image();
+    img_slider_back_right.src = "./img/slider/sliderback_right.png";
+
+    var sliderBackRightBaseTexture = new PIXI.BaseTexture(img_slider_back_right);
+    var sliderBackRightTexture =  new PIXI.Texture(sliderBackRightBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
+    var sliderBackRightSprite = new PIXI.Sprite(sliderBackRightTexture);
+
+    sliderBackRightSprite.position.x = deviceWidth;
+    sliderBackRightSprite.position.y = deviceHeight;
+
+    sliderBackRightSprite.anchor.x = 1
+    sliderBackRightSprite.anchor.y = 1
+
+    sliderBackRightSprite.scale.x = 0.5
+    sliderBackRightSprite.scale.y = 0.5
+
+    var img_slider_back = new Image();
+    img_slider_back.src = "./img/slider/slider_back.png";
+
+    var sliderBackBaseTexture = new PIXI.BaseTexture(img_slider_back);
+    var sliderBackTexture =  new PIXI.Texture(sliderBackBaseTexture, new PIXI.Rectangle(0, 0, 2, 100));
+    var sliderBackSprite = new PIXI.Sprite(sliderBackTexture);
+
+    sliderBackSprite.position.x = 100;
+    sliderBackSprite.position.y = deviceHeight;
+
+    sliderBackSprite.anchor.x = 0
+    sliderBackSprite.anchor.y = 1
+
+    sliderBackSprite.scale.x = 1
+    //sliderBackSprite.scale.y = 100
+
 
     var displayObjCont = new PIXI.DisplayObjectContainer();
     displayObjCont.position.x = 1;
     displayObjCont.position.y = 1;
     displayObjCont.addChild(tableShadowSprite)
 
-    displayObjCont.addChild(sliderBackLeftSprite)
+    //displayObjCont.addChild(sliderBackLeftSprite)
     displayObjCont.addChild(chipSprite)
     stage.addChild(displayObjCont)
+    stage.addChild(sliderBackLeftSprite)
+    stage.addChild(sliderBackRightSprite)
+    stage.addChild(sliderBackSprite)
 
-    resize()
+    //resize()
 
     requestAnimationFrame(animate);
 
@@ -193,6 +233,27 @@
         displayObjCont.scale.y = scaleDeltaMin
         displayObjCont.position.x = deviceWidth/2;
         displayObjCont.position.y = deviceHeight/2;
+
+        sliderBackLeftSprite.scale.x = scaleDeltaMin;
+        sliderBackLeftSprite.scale.y = scaleDeltaMin;
+
+        sliderBackLeftSprite.position.x = 0;
+        sliderBackLeftSprite.position.y = deviceHeight;
+
+        sliderBackRightSprite.scale.x = scaleDeltaMin;
+        sliderBackRightSprite.scale.y = scaleDeltaMin;
+
+        sliderBackRightSprite.position.x = deviceWidth;
+        sliderBackRightSprite.position.y = deviceHeight;
+
+        sliderBackSprite.position.x = sliderBackLeftSprite.texture.width*sliderBackLeftSprite.scale.x;
+        sliderBackSprite.position.y = deviceHeight;
+
+        sliderBackSprite.scale.y = scaleDeltaMin
+        var widthLeftBlack = sliderBackLeftSprite.texture.width*sliderBackLeftSprite.scale.x;
+
+                sliderBackSprite.scale.x = (deviceWidth - widthLeftBlack*2) / sliderBackSprite.texture.width
+
     }
 
 

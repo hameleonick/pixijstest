@@ -24,6 +24,25 @@
 
 <script>
 
+
+var assets=[
+    "./img/slider/slider.png",
+    "./img/slider/slider_glow.png",
+    "./img/slider/slider_glow0.png",
+    "./img/slider/slider_glow1.png",
+    "./img/slider/slider_glow2.png"
+];
+
+var assetLoader=new PIXI.AssetLoader(assets);
+assetLoader.addEventListener("onComplete",function(e){
+    console.log("done");
+    console.log(e);
+    console.log(this);
+});
+assetLoader.load();
+
+
+
     var standartWidth = 640;
     var standartHeight = 960;
 
@@ -174,7 +193,7 @@
     stage.addChild(sliderBackRightSprite)
     stage.addChild(sliderBackSprite)
 
-    //resize()
+    resize()
 
     requestAnimationFrame(animate);
 

@@ -26,21 +26,32 @@
 
 
 var assets=[
-    "./img/slider/slider.png",
-    "./img/slider/slider_glow.png",
-    "./img/slider/slider_glow0.png",
-    "./img/slider/slider_glow1.png",
-    "./img/slider/slider_glow2.png"
+    "./img/table_shadow.png",
+    "./img/table_top.png",
+    "./img/chip_blue_big_1.png",
+    "./img/slider/sliderback_left.png",
+    "./img/slider/sliderback_right.png",
+    "./img/slider/slider_back.png"
 ];
 
 var assetLoader=new PIXI.AssetLoader(assets);
+var assThis;
 assetLoader.addEventListener("onComplete",function(e){
     console.log("done");
     console.log(e);
-    console.log(this);
+    runGame();
+//    assThis = e;
+//    console.log(this);
+//    console.log(assetLoader)
+});
+
+assetLoader.addEventListener("onProgress",function(e){
+
+
 });
 assetLoader.load();
 
+function runGame() {
 
 
     var standartWidth = 640;
@@ -58,51 +69,50 @@ assetLoader.load();
     var deviceHeight = 0;
     var scaleWidthFactor;
     var scaleHeightFactor;
-    if(navigator.userAgent.indexOf("iPhone")+1){
+    if (navigator.userAgent.indexOf("iPhone") + 1) {
         deviceWidth = screen.availWidth;
         deviceHeight = screen.availHeight;
 
-        scaleWidthFactor = deviceWidth/standartWidth;
-        scaleHeightFactor = deviceHeight/standartHeight;
+        scaleWidthFactor = deviceWidth / standartWidth;
+        scaleHeightFactor = deviceHeight / standartHeight;
 
     }
-    else if(navigator.userAgent.indexOf("Android")+1)
-    {
+    else if (navigator.userAgent.indexOf("Android") + 1) {
         deviceHeight = window.innerHeight;
         deviceWidth = window.innerWidth;
 
-        scaleWidthFactor = (deviceWidth/standartWidth)//window.devicePixelRatio;
-        scaleHeightFactor = (deviceHeight/standartHeight)//window.devicePixelRatio;
+        scaleWidthFactor = (deviceWidth / standartWidth)//window.devicePixelRatio;
+        scaleHeightFactor = (deviceHeight / standartHeight)//window.devicePixelRatio;
     }
 
-    var scaleFactor = Math.max(scaleHeightFactor,scaleWidthFactor);
+    var scaleFactor = Math.max(scaleHeightFactor, scaleWidthFactor);
 
-    var renderer = new PIXI.autoDetectRecommendedRenderer(deviceWidth,deviceHeight);//
+    var renderer = new PIXI.autoDetectRecommendedRenderer(deviceWidth, deviceHeight);//
     document.body.appendChild(renderer.view);
-    renderer.resize(640,960)
+    renderer.resize(640, 960)
 
     var stage = new PIXI.Stage();
 
     stage.setBackgroundColor(0x0000FF);
 
-    var img_shadow = new Image();
-
-    img_shadow.src = "./img/table_shadow.png";
-
-    var tableShadowBaseTexture = new PIXI.BaseTexture(img_shadow);
-    var tableShadowTexture =  new PIXI.Texture(tableShadowBaseTexture, new PIXI.Rectangle(0, 0, 640, 960));
-    var tableShadowSprite = new PIXI.Sprite(tableShadowTexture);
+//    var img_shadow = new Image();
+//
+//    img_shadow.src = "./img/table_shadow.png";
+//
+//    var tableShadowBaseTexture = new PIXI.BaseTexture(img_shadow);
+//    var tableShadowTexture = new PIXI.Texture(tableShadowBaseTexture, new PIXI.Rectangle(0, 0, 640, 960));
+    var tableShadowSprite = new PIXI.Sprite.fromImage("./img/table_shadow.png");
 
     tableShadowSprite.anchor.x = 0.5
     tableShadowSprite.anchor.y = 0.5
 
-    var img_table = new Image();
-
-    img_table.src = "./img/table_top.png";
-
-    var tableBaseTexture = new PIXI.BaseTexture(img_table);
-    var tableTexture =  new PIXI.Texture(tableBaseTexture, new PIXI.Rectangle(0, 0, 640, 960));
-    var tableSprite = new PIXI.Sprite(tableTexture);
+//    var img_table = new Image();
+//
+//    img_table.src = "./img/table_top.png";
+//
+//    var tableBaseTexture = new PIXI.BaseTexture(img_table);
+//    var tableTexture = new PIXI.Texture(tableBaseTexture, new PIXI.Rectangle(0, 0, 640, 960));
+    var tableSprite = new PIXI.Sprite.fromImage("./img/table_top.png");
 
     tableSprite.anchor.x = 0.5
     tableSprite.anchor.y = 0.5
@@ -110,12 +120,12 @@ assetLoader.load();
     tableShadowSprite.addChild(tableSprite)
 
 
-    var img_chip = new Image();
-
-    img_chip.src = "./img/chip_blue_big_1.png";
-    var chipBaseTexture = new PIXI.BaseTexture(img_chip);
-    var chipTexture =  new PIXI.Texture(chipBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
-    var chipSprite = new PIXI.Sprite(chipTexture);
+//    var img_chip = new Image();
+//
+//    img_chip.src = "./img/chip_blue_big_1.png";
+//    var chipBaseTexture = new PIXI.BaseTexture(img_chip);
+//    var chipTexture = new PIXI.Texture(chipBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
+    var chipSprite = new PIXI.Sprite.fromImage("./img/chip_blue_big_1.png");
 
     chipSprite.scale.x = 1.5;
     chipSprite.scale.y = 1.5;
@@ -131,12 +141,12 @@ assetLoader.load();
 
     createEventlistenersForChip(chipSprite)
 
-    var img_slider_back_left = new Image();
-    img_slider_back_left.src = "./img/slider/sliderback_left.png";
-
-    var sliderBackLeftBaseTexture = new PIXI.BaseTexture(img_slider_back_left);
-    var sliderBackLeftTexture =  new PIXI.Texture(sliderBackLeftBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
-    var sliderBackLeftSprite = new PIXI.Sprite(sliderBackLeftTexture);
+//    var img_slider_back_left = new Image();
+//    img_slider_back_left.src = "./img/slider/sliderback_left.png";
+//
+//    var sliderBackLeftBaseTexture = new PIXI.BaseTexture(img_slider_back_left);
+//    var sliderBackLeftTexture = new PIXI.Texture(sliderBackLeftBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
+    var sliderBackLeftSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_left.png");
 
     sliderBackLeftSprite.position.x = 0;
     sliderBackLeftSprite.position.y = deviceHeight;
@@ -148,12 +158,12 @@ assetLoader.load();
     sliderBackLeftSprite.scale.y = 0.5
 
 
-    var img_slider_back_right = new Image();
-    img_slider_back_right.src = "./img/slider/sliderback_right.png";
-
-    var sliderBackRightBaseTexture = new PIXI.BaseTexture(img_slider_back_right);
-    var sliderBackRightTexture =  new PIXI.Texture(sliderBackRightBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
-    var sliderBackRightSprite = new PIXI.Sprite(sliderBackRightTexture);
+//    var img_slider_back_right = new Image();
+//    img_slider_back_right.src = "./img/slider/sliderback_right.png";
+//
+//    var sliderBackRightBaseTexture = new PIXI.BaseTexture(img_slider_back_right);
+//    var sliderBackRightTexture = new PIXI.Texture(sliderBackRightBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
+    var sliderBackRightSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_right.png");
 
     sliderBackRightSprite.position.x = deviceWidth;
     sliderBackRightSprite.position.y = deviceHeight;
@@ -164,12 +174,12 @@ assetLoader.load();
     sliderBackRightSprite.scale.x = 0.5
     sliderBackRightSprite.scale.y = 0.5
 
-    var img_slider_back = new Image();
-    img_slider_back.src = "./img/slider/slider_back.png";
-
-    var sliderBackBaseTexture = new PIXI.BaseTexture(img_slider_back);
-    var sliderBackTexture =  new PIXI.Texture(sliderBackBaseTexture, new PIXI.Rectangle(0, 0, 2, 100));
-    var sliderBackSprite = new PIXI.Sprite(sliderBackTexture);
+//    var img_slider_back = new Image();
+//    img_slider_back.src = "./img/slider/slider_back.png";
+//
+//    var sliderBackBaseTexture = new PIXI.BaseTexture(img_slider_back);
+//    var sliderBackTexture = new PIXI.Texture(sliderBackBaseTexture, new PIXI.Rectangle(0, 0, 2, 100));
+    var sliderBackSprite = new PIXI.Sprite.fromImage("./img/slider/slider_back.png");
 
     sliderBackSprite.position.x = 100;
     sliderBackSprite.position.y = deviceHeight;
@@ -209,8 +219,7 @@ assetLoader.load();
     window.addEventListener('resize', resize, false);
     window.addEventListener('orientationchange', resize, false);
 
-    function resize()
-    {
+    function resize() {
 
         var standartWidth = 640;
         var standartHeight = 960;
@@ -227,31 +236,30 @@ assetLoader.load();
         var deviceHeight = 0;
         var scaleWidthFactor;
         var scaleHeightFactor;
-        if(navigator.userAgent.indexOf("iPhone")+1){
+        if (navigator.userAgent.indexOf("iPhone") + 1) {
             deviceWidth = screen.availWidth;
             deviceHeight = screen.availHeight;
 
-            scaleWidthFactor = deviceWidth/standartWidth;
-            scaleHeightFactor = deviceHeight/standartHeight;
+            scaleWidthFactor = deviceWidth / standartWidth;
+            scaleHeightFactor = deviceHeight / standartHeight;
 
         }
-        else if(navigator.userAgent.indexOf("Android")+1)
-        {
+        else if (navigator.userAgent.indexOf("Android") + 1) {
             deviceHeight = window.innerHeight;
             deviceWidth = window.innerWidth;
 
-            scaleWidthFactor = (deviceWidth/standartWidth)//window.devicePixelRatio;
-            scaleHeightFactor = (deviceHeight/standartHeight)//window.devicePixelRatio;
+            scaleWidthFactor = (deviceWidth / standartWidth)//window.devicePixelRatio;
+            scaleHeightFactor = (deviceHeight / standartHeight)//window.devicePixelRatio;
         }
 
-        var scaleDeltaMin = Math.min(scaleWidthFactor,scaleHeightFactor);
-        var scaleDeltaMax = Math.max(scaleWidthFactor,scaleHeightFactor);
-        renderer.resize(deviceWidth,deviceHeight)
+        var scaleDeltaMin = Math.min(scaleWidthFactor, scaleHeightFactor);
+        var scaleDeltaMax = Math.max(scaleWidthFactor, scaleHeightFactor);
+        renderer.resize(deviceWidth, deviceHeight)
 
         displayObjCont.scale.x = scaleDeltaMin
         displayObjCont.scale.y = scaleDeltaMin
-        displayObjCont.position.x = deviceWidth/2;
-        displayObjCont.position.y = deviceHeight/2;
+        displayObjCont.position.x = deviceWidth / 2;
+        displayObjCont.position.y = deviceHeight / 2;
 
         sliderBackLeftSprite.scale.x = scaleDeltaMin;
         sliderBackLeftSprite.scale.y = scaleDeltaMin;
@@ -265,20 +273,19 @@ assetLoader.load();
         sliderBackRightSprite.position.x = deviceWidth;
         sliderBackRightSprite.position.y = deviceHeight;
 
-        sliderBackSprite.position.x = sliderBackLeftSprite.texture.width*sliderBackLeftSprite.scale.x;
+        sliderBackSprite.position.x = sliderBackLeftSprite.texture.width * sliderBackLeftSprite.scale.x;
         sliderBackSprite.position.y = deviceHeight;
 
         sliderBackSprite.scale.y = scaleDeltaMin
-        var widthLeftBlack = sliderBackLeftSprite.texture.width*sliderBackLeftSprite.scale.x;
+        var widthLeftBlack = sliderBackLeftSprite.texture.width * sliderBackLeftSprite.scale.x;
 
-                sliderBackSprite.scale.x = (deviceWidth - widthLeftBlack*2) / sliderBackSprite.texture.width
+        sliderBackSprite.scale.x = (deviceWidth - widthLeftBlack * 2) / sliderBackSprite.texture.width
 
     }
 
 
-    function createEventlistenersForChip(chip){
-        chip.mousedown = chip.touchstart = function(data)
-        {
+    function createEventlistenersForChip(chip) {
+        chip.mousedown = chip.touchstart = function (data) {
             //		data.originalEvent.preventDefault()
             // store a refference to the data
             // The reason for this is because of multitouch
@@ -289,8 +296,7 @@ assetLoader.load();
         };
 
         // set the events for when the mouse is released or a touch is released
-        chip.mouseup = chip.mouseupoutside = chip.touchend = chip.touchendoutside = function(data)
-        {
+        chip.mouseup = chip.mouseupoutside = chip.touchend = chip.touchendoutside = function (data) {
             this.alpha = 1
             this.dragging = false;
             // set the interaction data to null
@@ -298,11 +304,9 @@ assetLoader.load();
         };
 
         // set the callbacks for when the mouse or a touch moves
-        chip.mousemove = chip.touchmove = function(data)
-        {
+        chip.mousemove = chip.touchmove = function (data) {
 
-            if(this.dragging)
-            {
+            if (this.dragging) {
                 console.log(this);
                 // need to get parent coords..
                 var newPosition = this.data.getLocalPosition(this.parent);
@@ -311,6 +315,8 @@ assetLoader.load();
             }
         }
     }
+
+}
 
 </script>
 

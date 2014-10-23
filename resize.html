@@ -141,21 +141,30 @@ function runGame() {
 //    img_chip.src = "./img/chip_blue_big_1.png";
 //    var chipBaseTexture = new PIXI.BaseTexture(img_chip);
 //    var chipTexture = new PIXI.Texture(chipBaseTexture, new PIXI.Rectangle(0, 0, 100, 100));
-    var chipSprite = new PIXI.Sprite.fromImage("./img/chip_blue_big_1.png");
+    var chipsSprites = [];
+    var ydelta = -deviceHeight/2
+    var xdelta = -deviceWidth/2
+    for(var i = 0;i<1; i++){
+        var chipSprite = new PIXI.Sprite.fromImage("./img/chip_blue_big_1.png");
 
-    chipSprite.scale.x = 1.5;
-    chipSprite.scale.y = 1.5;
+        chipSprite.scale.x = 1.5;
+        chipSprite.scale.y = 1.5;
 
-    chipSprite.anchor.x = 0.5
-    chipSprite.anchor.y = 0.5
+        chipSprite.anchor.x = 0.5
+        chipSprite.anchor.y = 0.5
 
-    chipSprite.position.x = 240;
-    chipSprite.position.y = 300;
+        chipSprite.position.x = 240//xdelta + i*6;//240
+        chipSprite.position.y = 300//ydelta + i*6;//300
 
-    chipSprite.interactive = true;
-    chipSprite.buttonMode = true;
+        chipSprite.interactive = true;
+        chipSprite.buttonMode = true;
 
-    createEventlistenersForChip(chipSprite)
+        chipSprite.movetypeX = 15;
+
+        createEventlistenersForChip(chipSprite)
+
+        chipsSprites.push(chipSprite)
+    }
 
 //    var img_slider_back_left = new Image();
 //    img_slider_back_left.src = "./img/slider/sliderback_left.png";
@@ -341,7 +350,9 @@ function runGame() {
     displayObjCont.addChild(plateBaseSprite)
     displayObjCont.addChild(plateBaseUser2Sprite)
 
-    displayObjCont.addChild(chipSprite)
+    for(var i=0; i<chipsSprites.length; i++){
+        displayObjCont.addChild(chipsSprites[i])
+    }
     stage.addChild(displayObjCont)
     stage.addChild(sliderBackSprite)
 //    stage.addChild(sliderBlueSprite)
@@ -353,9 +364,10 @@ function runGame() {
     stage.addChild(topMenuBlackSprite)
     stage.addChild(menuSprite)
 //    stage.addChild(minusButtonSprite)
-
+//console.log("displayObjCont")
+//    console.log(displayObjCont)
     resize();
-
+    var movetypeX = 5;
     requestAnimationFrame(animate);
 
 
@@ -363,8 +375,31 @@ function runGame() {
         //bunny.rotation += 0.01;
 
         renderer.render(stage);
-
+       // moveChip()
         requestAnimationFrame(animate);
+    }
+
+    function moveChip(){
+        deviceHeight = window.innerHeight;
+        deviceWidth = window.innerWidth;
+
+        for(var i=0; i<chipsSprites.length; i++){
+
+            var chipSprite = chipsSprites[i];
+            chipSprite.rotation += 0.01
+            if(chipSprite.position.x <= -displayObjCont.position.x){
+
+                chipSprite.movetypeX = 15;
+                chipSprite.position.x +=chipSprite.movetypeX;
+            }
+            else if(chipSprite.position.x >= displayObjCont.position.x){
+                chipSprite.movetypeX = -15;
+                chipSprite.position.x +=chipSprite.movetypeX;
+            }
+            else
+                chipSprite.position.x +=chipSprite.movetypeX;
+        }
+//        console.log(chipSprite.position.x)
     }
 
     window.addEventListener('resize', resize, false);

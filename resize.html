@@ -2,6 +2,10 @@
 <html>
 <head>
     <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+
+    <meta name = "apple-mobile-web-app-capable" content="yes"/>
+    <meta name = "apple-mobile-web-app-status-bar-style" content = "black"/>
+    <meta name="format-detection" content="telephone=no">
     <script type="text/javascript" src="./js/libs/pixi.js"></script>
 </head>
 
@@ -30,8 +34,20 @@ var assets=[
     "./img/table_top.png",
     "./img/chip_blue_big_1.png",
     "./img/slider/sliderback_left.png",
+    "./img/slider/slider_minus.png",
     "./img/slider/sliderback_right.png",
-    "./img/slider/slider_back.png"
+    "./img/slider/slider_plus.png",
+    "./img/slider/slider_back.png",
+    "./img/slider/slider_glow0.png",
+    "./img/slider/slider_glow1.png",
+    "./img/slider/slider_glow2.png",
+    "./img/slider/slider.png",
+    "./img/plate_base.png",
+    "./img/plate_player.png",
+    "./img/potbet_50.png",
+    "./img/potbet_75.png",
+    "./img/potbet_100.png",
+    "./img/menu.png"
 ];
 
 var assetLoader=new PIXI.AssetLoader(assets);
@@ -87,7 +103,7 @@ function runGame() {
 
     var scaleFactor = Math.max(scaleHeightFactor, scaleWidthFactor);
 
-    var renderer = new PIXI.autoDetectRecommendedRenderer(deviceWidth, deviceHeight);//
+    var renderer = new PIXI.CanvasRenderer(deviceWidth, deviceHeight);//
     document.body.appendChild(renderer.view);
     renderer.resize(640, 960)
 
@@ -157,6 +173,23 @@ function runGame() {
     sliderBackLeftSprite.scale.x = 0.5
     sliderBackLeftSprite.scale.y = 0.5
 
+    var minusButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_minus.png");
+    minusButtonSprite.anchor.x = 0;
+    minusButtonSprite.anchor.y = 1;
+
+    minusButtonSprite.scale.x = 1
+    minusButtonSprite.scale.y = 1
+
+    sliderBackLeftSprite.addChild(minusButtonSprite);
+
+
+
+
+
+//    console.log("minus")
+//    console.log(minusButtonSprite)
+
+
 
 //    var img_slider_back_right = new Image();
 //    img_slider_back_right.src = "./img/slider/sliderback_right.png";
@@ -174,11 +207,30 @@ function runGame() {
     sliderBackRightSprite.scale.x = 0.5
     sliderBackRightSprite.scale.y = 0.5
 
+    var plusButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_plus.png");
+    plusButtonSprite.anchor.x = 1;
+    plusButtonSprite.anchor.y = 1;
+
+    plusButtonSprite.scale.x = 1
+    plusButtonSprite.scale.y = 1
+
+    sliderBackRightSprite.addChild(plusButtonSprite)
 //    var img_slider_back = new Image();
 //    img_slider_back.src = "./img/slider/slider_back.png";
 //
 //    var sliderBackBaseTexture = new PIXI.BaseTexture(img_slider_back);
 //    var sliderBackTexture = new PIXI.Texture(sliderBackBaseTexture, new PIXI.Rectangle(0, 0, 2, 100));
+
+    var sliderSprite = new PIXI.Sprite.fromImage("./img/slider/slider.png");
+
+    sliderSprite.position.x = 114;
+    sliderSprite.position.y = deviceHeight;
+
+    sliderSprite.anchor.x = 0
+    sliderSprite.anchor.y = 1
+
+    sliderSprite.scale.x = 1
+
     var sliderBackSprite = new PIXI.Sprite.fromImage("./img/slider/slider_back.png");
 
     sliderBackSprite.position.x = 100;
@@ -188,22 +240,121 @@ function runGame() {
     sliderBackSprite.anchor.y = 1
 
     sliderBackSprite.scale.x = 1
-    //sliderBackSprite.scale.y = 100
 
+    var sliderBlueSprite = new PIXI.Sprite.fromImage("./img/slider/slider_glow0.png");
+
+    sliderBlueSprite.position.x = 110;
+    sliderBlueSprite.position.y = deviceHeight;
+
+    sliderBlueSprite.anchor.x = 0
+    sliderBlueSprite.anchor.y = 1
+
+    sliderBlueSprite.scale.x = 1
+
+    var menuSprite = new PIXI.Sprite.fromImage("./img/menu.png");
+    menuSprite.anchor.x = 0;
+    menuSprite.anchor.y = 0;
+    menuSprite.position.x = 5;
+    menuSprite.position.y = 10;
+    menuSprite.texture.width = 57
+    menuSprite.texture.height = 42
+    //menuSprite.scale.y =
+
+    var topMenuBlackSprite = new PIXI.Sprite.fromImage("./img/slider/slider_back.png");
+    topMenuBlackSprite.anchor.x = 0;
+    topMenuBlackSprite.anchor.y = 0;
+    topMenuBlackSprite.position.x = 0;
+    topMenuBlackSprite.position.y = 0;
+    topMenuBlackSprite.scale.x = 10
+    topMenuBlackSprite.scale.y = 0.5
+//    topMenuBlackSprite.addChild(menuSprite)
+    //topMenuBlackSprite.height = 100
+    //topMenuBlackSprite.texture.width = 2
+
+
+    var potbet50Sprite = new PIXI.Sprite.fromImage("./img/potbet_50.png");
+    potbet50Sprite.position.x = -180;
+    potbet50Sprite.position.y = -150;
+
+    var potbet75Sprite = new PIXI.Sprite.fromImage("./img/potbet_75.png");
+    potbet75Sprite.position.x = -55;
+    potbet75Sprite.position.y = -150;
+
+    var potbet100Sprite = new PIXI.Sprite.fromImage("./img/potbet_100.png");
+    potbet100Sprite.position.x = 70;
+    potbet100Sprite.position.y = -150;
+
+    var plateBaseSprite = new PIXI.Sprite.fromImage("./img/plate_base.png");
+
+    plateBaseSprite.anchor.x = 0.5
+    plateBaseSprite.anchor.y = 0.5
+    plateBaseSprite.position.y = 300
+
+    var platePlayerSprite = new PIXI.Sprite.fromImage("./img/plate_player.png");
+    platePlayerSprite.anchor.x = 0.5
+    platePlayerSprite.anchor.y = 0.5
+    plateBaseSprite.addChild(platePlayerSprite)
+
+    var plateWinSprite = new PIXI.Sprite.fromImage("./img/plate_win_bg.png");
+    plateWinSprite.anchor.x = 0.5
+    plateWinSprite.anchor.y = 0.5
+    plateBaseSprite.addChild(plateWinSprite)
+
+    var playerAmount = new PIXI.Text("150$", {fill:"white"})
+    playerAmount.anchor.x = 0.5;
+    playerAmount.anchor.y = 0;
+    playerAmount.position.y = 10
+
+    plateBaseSprite.addChild(playerAmount)
+
+
+
+    var plateBaseUser2Sprite = new PIXI.Sprite.fromImage("./img/plate_base.png");
+
+    plateBaseUser2Sprite.anchor.x = 0.5
+    plateBaseUser2Sprite.anchor.y = 0.5
+    plateBaseUser2Sprite.position.x = 250
+
+    var plateUser2Sprite = new PIXI.Sprite.fromImage("./img/plate_player.png");
+    plateUser2Sprite.anchor.x = 0.5
+    plateUser2Sprite.anchor.y = 0.5
+    plateBaseUser2Sprite.addChild(plateUser2Sprite)
+
+    var UserName = new PIXI.Text("User Name", {fill:"red",font:"bold 20px Arial"})
+    UserName.anchor.x = 0.5;
+    UserName.anchor.y = 0;
+    UserName.position.y = 10
+
+    plateBaseUser2Sprite.addChild(UserName)
 
     var displayObjCont = new PIXI.DisplayObjectContainer();
     displayObjCont.position.x = 1;
     displayObjCont.position.y = 1;
+//    tableSprite.addChild(minusButtonSprite)
     displayObjCont.addChild(tableShadowSprite)
 
-    //displayObjCont.addChild(sliderBackLeftSprite)
+
+    displayObjCont.addChild(potbet50Sprite)
+    displayObjCont.addChild(potbet75Sprite)
+    displayObjCont.addChild(potbet100Sprite)
+
+    displayObjCont.addChild(plateBaseSprite)
+    displayObjCont.addChild(plateBaseUser2Sprite)
+
     displayObjCont.addChild(chipSprite)
     stage.addChild(displayObjCont)
+    stage.addChild(sliderBackSprite)
+//    stage.addChild(sliderBlueSprite)
+//    stage.addChild(sliderSprite)
+
     stage.addChild(sliderBackLeftSprite)
     stage.addChild(sliderBackRightSprite)
-    stage.addChild(sliderBackSprite)
 
-    resize()
+    stage.addChild(topMenuBlackSprite)
+    stage.addChild(menuSprite)
+//    stage.addChild(minusButtonSprite)
+
+    resize();
 
     requestAnimationFrame(animate);
 
@@ -219,67 +370,96 @@ function runGame() {
     window.addEventListener('resize', resize, false);
     window.addEventListener('orientationchange', resize, false);
 
-    function resize() {
+    function resize(e) {
 
-        var standartWidth = 640;
-        var standartHeight = 960;
+        setTimeout(function(){
+            var standartWidth = 640;
+            var standartHeight = 960;
 
-        /*
-         *   x = 75
-         *   y = 75
-         *
-         *
-         *   detect max size of Width/Height
-         *
-         * */
-        var deviceWidth = 0;
-        var deviceHeight = 0;
-        var scaleWidthFactor;
-        var scaleHeightFactor;
-        if (navigator.userAgent.indexOf("iPhone") + 1) {
-            deviceWidth = screen.availWidth;
-            deviceHeight = screen.availHeight;
-
-            scaleWidthFactor = deviceWidth / standartWidth;
-            scaleHeightFactor = deviceHeight / standartHeight;
-
-        }
-        else if (navigator.userAgent.indexOf("Android") + 1) {
+            /*
+             *   x = 75
+             *   y = 75
+             *
+             *
+             *   detect max size of Width/Height
+             *
+             * */
+            var deviceWidth = 0;
+            var deviceHeight = 0;
+            var scaleWidthFactor;
+            var scaleHeightFactor;
+//        if (navigator.userAgent.indexOf("iPhone") + 1) {
+//            deviceWidth = screen.availWidth;
+//            deviceHeight = screen.availHeight;
+//
+//            if(window.innerWidth > screen.availWidth){
+//                deviceHeight = screen.availWidth-20;
+//                deviceWidth = screen.height
+//            }
+//
+//
+//
+//            scaleWidthFactor = deviceWidth / standartWidth;
+//            scaleHeightFactor = deviceHeight / standartHeight;
+//
+//        }
+//        else if (navigator.userAgent.indexOf("Android") + 1) {
             deviceHeight = window.innerHeight;
             deviceWidth = window.innerWidth;
 
             scaleWidthFactor = (deviceWidth / standartWidth)//window.devicePixelRatio;
             scaleHeightFactor = (deviceHeight / standartHeight)//window.devicePixelRatio;
-        }
+//        }
+//        deviceHeight = window.innerHeight;
+//        deviceWidth = window.innerWidth;
+          //  alert(screen.availWidth+" "+screen.availHeight+" "+window.innerWidth+" "+window.innerHeight);
 
-        var scaleDeltaMin = Math.min(scaleWidthFactor, scaleHeightFactor);
-        var scaleDeltaMax = Math.max(scaleWidthFactor, scaleHeightFactor);
-        renderer.resize(deviceWidth, deviceHeight)
 
-        displayObjCont.scale.x = scaleDeltaMin
-        displayObjCont.scale.y = scaleDeltaMin
-        displayObjCont.position.x = deviceWidth / 2;
-        displayObjCont.position.y = deviceHeight / 2;
+            var scaleDeltaMin = Math.min(scaleWidthFactor, scaleHeightFactor);
+            var scaleDeltaMax = Math.max(scaleWidthFactor, scaleHeightFactor);
+            renderer.resize(deviceWidth, deviceHeight)
 
-        sliderBackLeftSprite.scale.x = scaleDeltaMin;
-        sliderBackLeftSprite.scale.y = scaleDeltaMin;
+            displayObjCont.scale.x = scaleDeltaMin
+            displayObjCont.scale.y = scaleDeltaMin
+            displayObjCont.position.x = deviceWidth / 2;
+            displayObjCont.position.y = deviceHeight / 2;
 
-        sliderBackLeftSprite.position.x = 0;
-        sliderBackLeftSprite.position.y = deviceHeight;
+            sliderBackLeftSprite.scale.x = scaleDeltaMin;
+            sliderBackLeftSprite.scale.y = scaleDeltaMin;
 
-        sliderBackRightSprite.scale.x = scaleDeltaMin;
-        sliderBackRightSprite.scale.y = scaleDeltaMin;
+            sliderBackLeftSprite.position.x = 0;
+            sliderBackLeftSprite.position.y = deviceHeight;
 
-        sliderBackRightSprite.position.x = deviceWidth;
-        sliderBackRightSprite.position.y = deviceHeight;
+            sliderBackRightSprite.scale.x = scaleDeltaMin;
+            sliderBackRightSprite.scale.y = scaleDeltaMin;
 
-        sliderBackSprite.position.x = sliderBackLeftSprite.texture.width * sliderBackLeftSprite.scale.x;
-        sliderBackSprite.position.y = deviceHeight;
+            sliderBackRightSprite.position.x = deviceWidth;
+            sliderBackRightSprite.position.y = deviceHeight;
 
-        sliderBackSprite.scale.y = scaleDeltaMin
-        var widthLeftBlack = sliderBackLeftSprite.texture.width * sliderBackLeftSprite.scale.x;
+            sliderBackSprite.position.x = sliderBackLeftSprite.texture.width * sliderBackLeftSprite.scale.x;
+            sliderBackSprite.position.y = deviceHeight;
 
-        sliderBackSprite.scale.x = (deviceWidth - widthLeftBlack * 2) / sliderBackSprite.texture.width
+            sliderBackSprite.scale.y = scaleDeltaMin
+            var widthLeftBlack = sliderBackLeftSprite.texture.width * sliderBackLeftSprite.scale.x;
+
+            sliderBackSprite.scale.x = Math.ceil((deviceWidth - widthLeftBlack * 2) / sliderBackSprite.texture.width)
+
+
+
+            topMenuBlackSprite.scale.x = Math.ceil(deviceWidth)/topMenuBlackSprite.texture.width
+            topMenuBlackSprite.scale.y = scaleDeltaMin/2
+
+            menuSprite.scale.x = scaleDeltaMin;
+            menuSprite.scale.y = scaleDeltaMin;
+            menuSprite.position.x = menuSprite.position.x * scaleDeltaMin;
+            menuSprite.position.y = menuSprite.position.y * scaleDeltaMin;
+
+            console.log(menuSprite)
+            console.log(topMenuBlackSprite)
+
+        },250);
+        console.log(e)
+
 
     }
 

@@ -62,12 +62,16 @@ var gsProto = GameScreen.prototype;
 
 gsProto.initialize = function(){
 
-    this.deviceWidth = screen.availWidth;
-    this.deviceHeight = screen.availHeight;
+    this.deviceWidth = window.innerWidth;
+    this.deviceHeight = window.innerHeight;
 
     this.gameContainer = null;
     this.tableElement = null;
     this.chipElement = null;
+    this.sliderContainer = null;
+
+
+    this.elemetsArray = [];
 
 }
 
@@ -78,7 +82,9 @@ gsProto.create = function(){
     this.createChipElement();
     this.createGameContainer();
     this.createStage();
+    this.createSliderContainer();
     this.addElementsToStage();
+    this.setupBaseGameEventListeners();
 }
 
 gsProto.createStage = function(){
@@ -88,12 +94,14 @@ gsProto.createStage = function(){
 
 gsProto.addElementsToStage = function(){
     this.gameStage.addChildAt(this.gameContainer,0);
-    this.gameStage.addChildAt(this.chipElement,1);
+    this.gameStage.addChildAt(this.sliderContainer, 1);
+    ///this.gameStage.addChildAt(this.chipElement,1);
 }
 
 gsProto.run = function(){
 
     this.renderer = new PIXI.CanvasRenderer(this.deviceWidth, this.deviceHeight);//
+    this.resize();
     document.body.appendChild(this.renderer.view);
 
     var self = this;
@@ -105,16 +113,77 @@ gsProto.run = function(){
     }
 }
 
+gsProto.setupBaseGameEventListeners = function(){
+    window.addEventListener('resize', this.resize.bind(this), false);
+    window.addEventListener('orientationchange', this.resize.bind(this), false);
+}
+
+
+gsProto.getResizeParams = function(){
+
+    /*
+     this.deviceWidth = window.innerWidth;
+     this.deviceHeight = window.innerHeight;
+     */
+    var standartWidth = 640;
+    var standartHeight = 960;
+    this.deviceWidth = window.innerWidth;
+    this.deviceHeight = window.innerHeight;
+    var orientationType = 0; // 0:portrait; 1:landscape
+    if(window.innerWidth > window.innerHeight)
+    {
+        standartWidth = 960;
+        standartHeight = 640;
+        orientationType = 1;
+    }
+
+    var scaleWidthFactor = (this.deviceWidth / standartWidth);
+    var scaleHeightFactor = (this.deviceHeight / standartHeight);
+
+    var scaleDeltaMin = Math.min(scaleWidthFactor, scaleHeightFactor);
+    var scaleDeltaMax = Math.max(scaleWidthFactor, scaleHeightFactor);
+
+    var resizeParams = {orientationType: orientationType,deviceWidth: this.deviceWidth, deviceHeight:this.deviceHeight,scaleWidthFactor:scaleWidthFactor, scaleHeightFactor:scaleHeightFactor, scaleDeltaMin:scaleDeltaMin, scaleDeltaMax:scaleDeltaMax};
+
+    return resizeParams;
+
+}
+
+gsProto.resize = function(){
+
+    setTimeout(function() {
+        var resizeParams = this.getResizeParams();
+        this.renderer.resize(resizeParams.deviceWidth, resizeParams.deviceHeight)
+        for (var i = 0; i < this.elemetsArray.length; i++) {
+            this.elemetsArray[i].resizeFunc(resizeParams)
+        }
+    }.bind(this),100);
+}
+
 gsProto.createGameContainer = function(){
     this.gameContainer = new PIXI.DisplayObjectContainer();
     this.gameContainer.position.x = 1;
     this.gameContainer.position.y = 1;
-
+    console.log(this.gameContainer)
+    this.gameContainer.resizeFunc = function (resizeParams) {
+        this.scale.x = resizeParams.scaleDeltaMin
+        this.scale.y = resizeParams.scaleDeltaMin
+        this.position.x = resizeParams.deviceWidth / 2;
+        this.position.y = resizeParams.deviceHeight / 2;
+        if(resizeParams.orientationType)
+        {
+            this.rotation = 1.57;
+        }
+        else
+            this.rotation = 0;
+    }
+    this.elemetsArray.push(this.gameContainer);
     this.addElementsToGameContainer();
 }
 
 gsProto.addElementsToGameContainer = function(){
     this.gameContainer.addChildAt(this.tableElement,0);
+    this.gameContainer.addChildAt(this.chipElement,1);
 }
 
 gsProto.createTableElement = function(){
@@ -141,13 +210,89 @@ gsProto.createChipElement = function(){
     this.chipElement.anchor.x = 0.5;
     this.chipElement.anchor.y = 0.5;
 
-    this.chipElement.position.x = 240;
-    this.chipElement.position.y = 240;
-
     this.chipElement.interactive = true;
     this.chipElement.buttonMode = true;
 
+    this.chipElement.resizeFunc = function(resizeParams){
+        if(resizeParams.orientationType)
+        {
+            this.position.x = 230;
+            this.position.y = -320;
+        }
+        else {
+            this.position.x = 240;
+            this.position.y = 300;
+        }
+    }
+
+    this.elemetsArray.push(this.chipElement);
+
+    this.chipElement.addEventListeners = function(){
+        this.mousedown = this.touchstart = function (data) {
+            //		data.originalEvent.preventDefault()
+            // store a refference to the data
+            // The reason for this is because of multitouch
+            // we want to track the movement of this particular touch
+            this.data = data;
+            this.alpha = 0.9;
+            this.dragging = true;
+        };
+
+        // set the events for when the mouse is released or a touch is released
+        this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = function (data) {
+            this.alpha = 1
+            this.dragging = false;
+            // set the interaction data to null
+            this.data = null;
+        };
+
+        // set the callbacks for when the mouse or a touch moves
+        this.mousemove = this.touchmove = function (data) {
+
+            if (this.dragging) {
+//                console.log(this);
+                // need to get parent coords..
+                var newPosition = this.data.getLocalPosition(this.parent);
+                this.position.x = newPosition.x//-50;
+                this.position.y = newPosition.y//-50;
+            }
+        }
+    }
+
+    this.chipElement.addEventListeners(this.chipElement);
+
 }
+
+gsProto.createSliderContainer = function () {
+//    var sliderBackLeftSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_left.png");
+//    var sliderBackRightSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_right.png");
+//    this.sliderContainer = new PIXI.DisplayObjectContainer();
+//    this.sliderContainer.position.y = this.deviceHeight;
+//    this.sliderContainer.position.x = 0;
+//
+//    sliderBackRightSprite.position.x =this.deviceWidth;
+//
+//
+//    sliderBackLeftSprite.anchor.y = 1
+//    sliderBackRightSprite.anchor.y = 1
+//    sliderBackRightSprite.anchor.x = 1
+//
+//    this.sliderContainer.addChild(sliderBackLeftSprite)
+//    this.sliderContainer.addChild(sliderBackRightSprite)
+//
+//    this.sliderContainer.resizeFunc = function (resizeParams) {
+//        //this.scale.x = resizeParams.scaleDeltaMin
+//        //this.scale.y = resizeParams.scaleDeltaMin
+//    }
+//
+//    this.elemetsArray.push(this.sliderContainer)
+
+    /*
+    impossible to use any 'native' Containers
+    */
+}
+
+
 
 assetLoader.addEventListener("onComplete",function(e){
     console.log("done");
@@ -255,7 +400,7 @@ function runGame() {
         chipSprite.anchor.y = 0.5
 
         chipSprite.position.x = 240//xdelta + i*6;//240
-        chipSprite.position.y = 240//ydelta + i*6;//300
+        chipSprite.position.y = 300//ydelta + i*6;//300
 
         chipSprite.interactive = true;
         chipSprite.buttonMode = true;

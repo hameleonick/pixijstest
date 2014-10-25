@@ -68,8 +68,9 @@ gsProto.initialize = function(){
     this.gameContainer = null;
     this.tableElement = null;
     this.chipElement = null;
-    this.sliderContainer = null;
-
+    this.sliderMinusSprite = null;
+    this.sliderPlusSprite = null;
+    this.sliderCenterSprite = null;
 
     this.elemetsArray = [];
 
@@ -94,7 +95,9 @@ gsProto.createStage = function(){
 
 gsProto.addElementsToStage = function(){
     this.gameStage.addChildAt(this.gameContainer,0);
-    this.gameStage.addChildAt(this.sliderContainer, 1);
+    this.gameStage.addChildAt(this.sliderMinusSprite, 1);
+    this.gameStage.addChildAt(this.sliderPlusSprite, 1);
+    this.gameStage.addChildAt(this.sliderCenterSprite, 1);
     ///this.gameStage.addChildAt(this.chipElement,1);
 }
 
@@ -217,7 +220,7 @@ gsProto.createChipElement = function(){
         if(resizeParams.orientationType)
         {
             this.position.x = 230;
-            this.position.y = -320;
+            this.position.y = -300;
         }
         else {
             this.position.x = 240;
@@ -264,32 +267,122 @@ gsProto.createChipElement = function(){
 }
 
 gsProto.createSliderContainer = function () {
-//    var sliderBackLeftSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_left.png");
-//    var sliderBackRightSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_right.png");
-//    this.sliderContainer = new PIXI.DisplayObjectContainer();
-//    this.sliderContainer.position.y = this.deviceHeight;
-//    this.sliderContainer.position.x = 0;
-//
-//    sliderBackRightSprite.position.x =this.deviceWidth;
-//
-//
-//    sliderBackLeftSprite.anchor.y = 1
-//    sliderBackRightSprite.anchor.y = 1
-//    sliderBackRightSprite.anchor.x = 1
-//
-//    this.sliderContainer.addChild(sliderBackLeftSprite)
-//    this.sliderContainer.addChild(sliderBackRightSprite)
-//
-//    this.sliderContainer.resizeFunc = function (resizeParams) {
-//        //this.scale.x = resizeParams.scaleDeltaMin
-//        //this.scale.y = resizeParams.scaleDeltaMin
-//    }
-//
-//    this.elemetsArray.push(this.sliderContainer)
+    this.createSliderMinusButton();
+    this.createSliderPlusButton();
+    this.createSliderCenter();
 
     /*
     impossible to use any 'native' Containers
     */
+}
+
+gsProto.createSliderMinusButton = function(){
+    this.sliderMinusSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_left.png");
+
+    this.sliderMinusSprite.position.x = 0;
+    this.sliderMinusSprite.position.y = this.deviceHeight;
+
+    var minusButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_minus.png");
+    minusButtonSprite.anchor.x = 0;
+    minusButtonSprite.anchor.y = 1;
+
+    this.sliderMinusSprite.addChild(minusButtonSprite);
+
+    this.sliderMinusSprite.resizeFunc = function(resizeParams){
+        this.scale.x = resizeParams.scaleDeltaMin;
+        this.scale.y = resizeParams.scaleDeltaMin;
+
+        if(resizeParams.orientationType)
+        {
+            this.anchor.x = 0;
+            this.anchor.y = 1;
+            this.position.x = resizeParams.deviceWidth;
+            this.position.y = resizeParams.deviceHeight;
+            this.rotation = -1.57;
+        }
+        else
+        {
+            this.rotation = 0;
+            this.anchor.x = 0;
+            this.anchor.y = 1;
+            this.position.x = 0;
+            this.position.y = resizeParams.deviceHeight;
+        }
+
+    }
+
+    this.elemetsArray.push(this.sliderMinusSprite)
+}
+
+gsProto.createSliderPlusButton = function(){
+
+    this.sliderPlusSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_right.png");
+
+    this.sliderPlusSprite.resizeFunc = function(resizeParams)
+    {
+        this.scale.x = resizeParams.scaleDeltaMin;
+        this.scale.y = resizeParams.scaleDeltaMin;
+        if(resizeParams.orientationType)
+        {
+            this.position.x = resizeParams.deviceWidth;
+            this.position.y = 0;
+            this.anchor.x = 1;
+            this.anchor.y = 1;
+            this.rotation = -1.57;
+        }
+        else{
+            this.position.x = resizeParams.deviceWidth;
+            this.position.y = resizeParams.deviceHeight;
+            this.anchor.x = 1;
+            this.anchor.y = 1;
+            this.rotation = 0;
+        }
+    }
+
+
+    var plusButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_plus.png");
+    plusButtonSprite.anchor.x = 1;
+    plusButtonSprite.anchor.y = 1;
+
+    plusButtonSprite.scale.x = 1;
+    plusButtonSprite.scale.y = 1;
+
+    this.sliderPlusSprite.addChild(plusButtonSprite);
+    this.elemetsArray.push(this.sliderPlusSprite);
+}
+
+
+gsProto.createSliderCenter = function(){
+
+    var self = this;
+    this.sliderCenterSprite = new PIXI.Sprite.fromImage("./img/slider/slider_back.png");
+console.log(this.sliderCenterSprite)
+    this.sliderCenterSprite.resizeFunc = function(resizeParams){
+        this.scale.x = resizeParams.scaleDeltaMin;
+        this.scale.y = resizeParams.scaleDeltaMin;
+        if(resizeParams.orientationType)
+        {
+            this.rotation = -1.57;
+            this.anchor.x = 1;
+            this.anchor.y = 1;
+            this.position.x = resizeParams.deviceWidth
+            this.position.y = self.sliderPlusSprite.texture.width;
+            this.width = resizeParams.deviceWidth-self.sliderMinusSprite.texture.width;
+        }
+        else{
+            this.position.x = self.sliderMinusSprite.texture.width;
+            this.position.y = resizeParams.deviceHeight;
+            this.anchor.x = 0;
+            this.anchor.y = 1;
+            this.width = resizeParams.deviceWidth-self.sliderPlusSprite.texture.width;
+            this.rotation = 0;
+        }
+    }
+
+
+
+
+    this.elemetsArray.push(this.sliderCenterSprite);
 }
 
 

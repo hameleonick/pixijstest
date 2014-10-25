@@ -47,7 +47,9 @@ var assets=[
     "./img/potbet_50.png",
     "./img/potbet_75.png",
     "./img/potbet_100.png",
-    "./img/menu.png"
+    "./img/menu.png",
+    "./img/slider/slider_minus_down.png",
+    "./img/slider/slider_plus_down.png"
 ];
 
 var assetLoader=new PIXI.AssetLoader(assets);
@@ -262,7 +264,7 @@ gsProto.createChipElement = function(){
         }
     }
 
-    this.chipElement.addEventListeners(this.chipElement);
+    this.chipElement.addEventListeners();
 
 }
 
@@ -282,9 +284,19 @@ gsProto.createSliderMinusButton = function(){
     this.sliderMinusSprite.position.x = 0;
     this.sliderMinusSprite.position.y = this.deviceHeight;
 
+    this.sliderMinusSprite.interactive = true;
+    this.sliderMinusSprite.buttonMode = true;
+
     var minusButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_minus.png");
     minusButtonSprite.anchor.x = 0;
     minusButtonSprite.anchor.y = 1;
+
+    var minusDownButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_minus_down.png");
+    minusDownButtonSprite.anchor.x = 0;
+    minusDownButtonSprite.anchor.y = 1;
+    minusDownButtonSprite.visible = false;
+
+    minusButtonSprite.addChild(minusDownButtonSprite);
 
     this.sliderMinusSprite.addChild(minusButtonSprite);
 
@@ -311,12 +323,32 @@ gsProto.createSliderMinusButton = function(){
 
     }
 
+    this.sliderMinusSprite.addEventListeners = function(){
+        this.mousedown = this.touchstart = function (data) {
+            this.data = data;
+            this.children[0].children[0].visible = true;
+        }
+
+        this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = function (data) {
+
+            this.children[0].children[0].visible = false
+            // set the interaction data to null
+            this.data = null;
+
+        };
+    }
+
+    this.sliderMinusSprite.addEventListeners();
+
     this.elemetsArray.push(this.sliderMinusSprite)
 }
 
 gsProto.createSliderPlusButton = function(){
 
     this.sliderPlusSprite = new PIXI.Sprite.fromImage("./img/slider/sliderback_right.png");
+
+    this.sliderPlusSprite.interactive = true;
+    this.sliderPlusSprite.buttonMode = true;
 
     this.sliderPlusSprite.resizeFunc = function(resizeParams)
     {
@@ -347,8 +379,35 @@ gsProto.createSliderPlusButton = function(){
     plusButtonSprite.scale.x = 1;
     plusButtonSprite.scale.y = 1;
 
+
+    var plusDownButtonSprite = new PIXI.Sprite.fromImage("./img/slider/slider_plus_down.png");
+    plusDownButtonSprite.anchor.x = 1;
+    plusDownButtonSprite.anchor.y = 1;
+    plusDownButtonSprite.visible = false;
+
+    plusButtonSprite.addChild(plusDownButtonSprite);
+
+    this.sliderPlusSprite.addEventListeners = function(){
+        this.mousedown = this.touchstart = function (data) {
+            this.data = data;
+            this.children[0].children[0].visible = true;
+        }
+
+        this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = function (data) {
+
+            this.children[0].children[0].visible = false
+            // set the interaction data to null
+            this.data = null;
+
+        };
+    }
+
+
+
+
     this.sliderPlusSprite.addChild(plusButtonSprite);
     this.elemetsArray.push(this.sliderPlusSprite);
+    this.sliderPlusSprite.addEventListeners();
 }
 
 
@@ -366,15 +425,15 @@ console.log(this.sliderCenterSprite)
             this.anchor.x = 1;
             this.anchor.y = 1;
             this.position.x = resizeParams.deviceWidth
-            this.position.y = self.sliderPlusSprite.texture.width;
-            this.width = resizeParams.deviceWidth-self.sliderMinusSprite.texture.width;
+            this.position.y = self.sliderPlusSprite.texture.width*resizeParams.scaleDeltaMin;
+            this.width = resizeParams.deviceWidth-self.sliderMinusSprite.texture.width*resizeParams.scaleDeltaMin;
         }
         else{
-            this.position.x = self.sliderMinusSprite.texture.width;
+            this.position.x = self.sliderMinusSprite.texture.width*resizeParams.scaleDeltaMin
             this.position.y = resizeParams.deviceHeight;
             this.anchor.x = 0;
             this.anchor.y = 1;
-            this.width = resizeParams.deviceWidth-self.sliderPlusSprite.texture.width;
+            this.width = resizeParams.deviceWidth-self.sliderPlusSprite.texture.width*resizeParams.scaleDeltaMin;
             this.rotation = 0;
         }
     }

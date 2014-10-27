@@ -75,6 +75,9 @@ gsProto.initialize = function(){
     this.sliderCenterSprite = null;
     this.sliderButton = null;
 
+    this.potbet50Sprite = null;
+    this.potbet75Sprite = null;
+    this.potbet100Sprite = null;
 
     this.elemetsArray = [];
 
@@ -195,7 +198,7 @@ gsProto.addElementsToGameContainer = function(){
     this.gameContainer.addChildAt(this.potbet50Sprite,1);
     this.gameContainer.addChildAt(this.potbet75Sprite,1);
     this.gameContainer.addChildAt(this.potbet100Sprite,1);
-    this.gameContainer.addChildAt(this.chipElement,2);
+    this.gameContainer.addChildAt(this.chipElement,4);
 }
 
 gsProto.createTableElement = function(){
@@ -338,11 +341,11 @@ gsProto.createSliderMinusButton = function(){
             this.data = data;
             this.children[0].children[0].visible = true;
             self.sliderButton.decrease();
-            timer = setInterval(self.sliderButton.decrease,100);
+//            timer = setInterval(self.sliderButton.decrease,100);
         }
 
         this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = function (data) {
-            clearInterval(timer);
+//            clearInterval(timer);
             this.children[0].children[0].visible = false
             // set the interaction data to null
             this.data = null;
@@ -406,11 +409,11 @@ gsProto.createSliderPlusButton = function(){
             this.data = data;
             this.children[0].children[0].visible = true;
             self.sliderButton.increase();
-            timer =setInterval(self.sliderButton.increase,100);
+//            timer =setInterval(self.sliderButton.increase,300);
         }
 
         this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = function (data) {
-            clearInterval(timer);
+//            clearInterval(timer);
             this.children[0].children[0].visible = false
             // set the interaction data to null
             this.data = null;
@@ -431,7 +434,7 @@ gsProto.createSliderCenter = function(){
 
     var self = this;
     this.sliderCenterSprite = new PIXI.Sprite.fromImage("./img/slider/slider_back.png");
-console.log(this.sliderCenterSprite)
+
     this.sliderCenterSprite.resizeFunc = function(resizeParams){
         this.scale.x = resizeParams.scaleDeltaMin;
         this.scale.y = resizeParams.scaleDeltaMin;
@@ -473,12 +476,12 @@ gsProto.createSliderButton = function(){
         this.resizeParams = resizeParams;
 
         this.position.begin = {p:(self.sliderMinusSprite.children[0].texture.width + this.texture.width/2)*resizeParams.scaleDeltaMin, l:(self.sliderPlusSprite.children[0].texture.width+this.texture.width/2)*resizeParams.scaleDeltaMin};
-        this.position.end = {p:(this.resizeParams.deviceWidth - self.sliderPlusSprite.children[0].texture.width - this.texture.width/2) * this.resizeParams.scaleDeltaMin, l:(resizeParams.deviceHeight-self.sliderMinusSprite.children[0].texture.width-this.texture.width/2)*resizeParams.scaleDeltaMin}
+        this.position.end = {p:(this.resizeParams.deviceWidth - (self.sliderPlusSprite.children[0].texture.width + this.texture.width/2) * this.resizeParams.scaleDeltaMin), l:resizeParams.deviceHeight-(self.sliderMinusSprite.children[0].texture.width+this.texture.width/2)*resizeParams.scaleDeltaMin}
 
         if(resizeParams.orientationType)
         {
             this.rotation = -1.57;
-            this.position.y = (resizeParams.deviceHeight-self.sliderMinusSprite.children[0].texture.width-this.texture.width/2)*resizeParams.scaleDeltaMin;
+            this.position.y = this.position.end.l;
             this.position.x = resizeParams.deviceWidth;
             this.anchor.x = 0.5;
             this.anchor.y = 1;
@@ -558,8 +561,7 @@ gsProto.createSliderButton = function(){
                 var newPosition = this.data.getLocalPosition(this.parent);
                 if(thisObj.resizeParams.orientationType)
                 {
-                    console.log(newPosition.y)
-                    console.log(self.sliderMinusSprite.children[0].texture.width * thisObj.resizeParams.scaleDeltaMin)
+
                     if (newPosition.y < thisObj.position.begin.l)
                         this.position.y = thisObj.position.begin.l;
                     else if (newPosition.y > thisObj.position.end.l)
@@ -646,6 +648,10 @@ gsProto.createPotButtons = function(){
     this.elemetsArray.push(this.potbet100Sprite);
 
 
+}
+
+gsProto.createUsers = function(){
+    
 }
 
 

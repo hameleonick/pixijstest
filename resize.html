@@ -49,7 +49,9 @@ var assets=[
     "./img/potbet_100.png",
     "./img/menu.png",
     "./img/slider/slider_minus_down.png",
-    "./img/slider/slider_plus_down.png"
+    "./img/slider/slider_plus_down.png",
+    "./img/chips_white_small_2.png",
+    "./img/plate_timer.png"
 ];
 
 var assetLoader=new PIXI.AssetLoader(assets);
@@ -85,11 +87,15 @@ gsProto.initialize = function(){
 
 gsProto.create = function(){
 
-
+    this.createGameContainer();
     this.createTableElement();
     this.createChipElement();
     this.createPotButtons();
-    this.createGameContainer();
+    this.createUsers();
+
+
+
+
     this.createStage();
     this.createSliderContainer();
     this.addElementsToStage();
@@ -190,15 +196,11 @@ gsProto.createGameContainer = function(){
             this.rotation = 0;
     }
     this.elemetsArray.push(this.gameContainer);
-    this.addElementsToGameContainer();
+//    this.addElementsToGameContainer();
 }
 
-gsProto.addElementsToGameContainer = function(){
-    this.gameContainer.addChildAt(this.tableElement,0);
-    this.gameContainer.addChildAt(this.potbet50Sprite,1);
-    this.gameContainer.addChildAt(this.potbet75Sprite,1);
-    this.gameContainer.addChildAt(this.potbet100Sprite,1);
-    this.gameContainer.addChildAt(this.chipElement,4);
+gsProto.addElementsToGameContainer = function(element, index){
+    this.gameContainer.addChildAt(element, index);
 }
 
 gsProto.createTableElement = function(){
@@ -213,6 +215,7 @@ gsProto.createTableElement = function(){
     tableSprite.anchor.y = 0.5
 
     this.tableElement.addChild(tableSprite)
+    this.addElementsToGameContainer(this.tableElement,0)
 }
 
 gsProto.createChipElement = function(){
@@ -228,15 +231,24 @@ gsProto.createChipElement = function(){
     this.chipElement.interactive = true;
     this.chipElement.buttonMode = true;
 
+    var betAmount = new PIXI.Text("75", {fill:"white"})
+    betAmount.anchor.x = 0.5;
+    betAmount.anchor.y = 0.5;
+    //betAmount.position.y = 10;
+
+    this.chipElement.addChild(betAmount)
+
     this.chipElement.resizeFunc = function(resizeParams){
         if(resizeParams.orientationType)
         {
             this.position.x = 230;
             this.position.y = -300;
+            this.rotation = -1.57;
         }
         else {
             this.position.x = 240;
             this.position.y = 300;
+            this.rotation = 0;
         }
     }
 
@@ -275,6 +287,7 @@ gsProto.createChipElement = function(){
     }
 
     this.chipElement.addEventListeners();
+    this.addElementsToGameContainer(this.chipElement,1);
 
 }
 
@@ -647,11 +660,90 @@ gsProto.createPotButtons = function(){
     this.elemetsArray.push(this.potbet75Sprite);
     this.elemetsArray.push(this.potbet100Sprite);
 
+    this.addElementsToGameContainer(this.potbet50Sprite,1)
+    this.addElementsToGameContainer(this.potbet75Sprite,1)
+    this.addElementsToGameContainer(this.potbet100Sprite,1)
+
 
 }
 
 gsProto.createUsers = function(){
-    
+
+    var users =[
+        {p:{
+            rotation : 0,
+            anchor : {x : 0.5, y : 0.5},
+            position : {y : 300,x : 0}
+        },
+        l:{
+            rotation : -1.57,
+            anchor : {x : 0.5, y : 0.5},
+            position : {y : 0,x : 220}
+        }
+
+        }
+    ];
+
+    for(var i = 0; i<users.length;i++){
+        this.createUser(users[i]);
+    }
+
+
+}
+
+gsProto.createUser = function(userJson,i){
+//    for(var i = 0; i<usersJson.length;i++){
+    this["plateBaseSprite"+i] = new PIXI.Sprite.fromImage("./img/plate_base.png");
+
+
+
+    var timer = new PIXI.Sprite.fromImage("./img/plate_timer.png");
+    timer.anchor.x = 0.5
+    timer.anchor.y = 0.5
+
+    var chipBet = new PIXI.Sprite.fromImage("./img/chips_white_small_2.png");
+    chipBet.anchor.x = 0.5
+    chipBet.anchor.y = 1;
+
+    var chipAmount = new PIXI.Text("10", {fill:"black",font:" 20pt Arial"})
+    chipAmount.anchor.x = 0.5;
+    chipAmount.anchor.y = 0;
+    chipAmount.position.y = -40;
+    chipBet.addChild(chipAmount)
+
+    var userName = new PIXI.Text("userName", {fill:"red",font:"15pt  Arial"})
+    userName.anchor.x = 0.5;
+    userName.anchor.y = 0;
+    userName.position.y = 5;
+
+    var playerAmount = new PIXI.Text("150", {fill:"white",font:"15pt  Arial"})
+    playerAmount.anchor.x = 0.5;
+    playerAmount.anchor.y = 0;
+    playerAmount.position.y = 30;
+
+    this["plateBaseSprite"+i].addChild(timer);
+    this["plateBaseSprite"+i].addChild(chipBet);
+    this["plateBaseSprite"+i].addChild(userName);
+    this["plateBaseSprite"+i].addChild(playerAmount);
+
+    this["plateBaseSprite"+i].resizeFunc = function(resizeParams){
+        if(resizeParams.orientationType)
+        {
+            this.rotation = userJson.l.rotation;
+            this.anchor = userJson.l.anchor;
+            this.position = userJson.l.position;
+        }
+        else
+        {
+            this.rotation = userJson.p.rotation;
+            this.anchor = userJson.p.anchor;
+            this.position = userJson.p.position;
+        }
+    }
+
+    this.elemetsArray.push(this["plateBaseSprite"+i])
+    this.addElementsToGameContainer(this["plateBaseSprite"+i],1);
+//    }
 }
 
 

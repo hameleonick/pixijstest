@@ -6,7 +6,7 @@
     <meta name = "apple-mobile-web-app-capable" content="yes"/>
     <meta name = "apple-mobile-web-app-status-bar-style" content = "black"/>
     <meta name="format-detection" content="telephone=no">
-    <script type="text/javascript" src="./js/libs/pixi.js"></script>
+    <script type="text/javascript" src="./js/libs/pixi.dev.js"></script>
 </head>
 
 <style>
@@ -119,6 +119,7 @@ gsProto.addElementsToStage = function(){
 gsProto.run = function(){
 
     this.renderer = new PIXI.autoDetectRenderer(this.deviceWidth, this.deviceHeight,{view:null, transparent:false, antialias:false, preserveDrawingBuffer:false, resolution:window.devicePixelRatio, clearBeforeRender:true});//
+    console.log(this.renderer)
     this.resize();
     document.body.appendChild(this.renderer.view);
 
@@ -239,6 +240,7 @@ gsProto.createChipElement = function(){
     this.chipElement.addChild(betAmount)
 
     this.chipElement.resizeFunc = function(resizeParams){
+        this.resizeParams = resizeParams;
         if(resizeParams.orientationType)
         {
             this.position.x = 230;
@@ -280,8 +282,15 @@ gsProto.createChipElement = function(){
 //                console.log(this);
                 // need to get parent coords..
                 var newPosition = this.data.getLocalPosition(this.parent);
-                this.position.x = newPosition.x//-50;
-                this.position.y = newPosition.y//-50;
+                if(this.resizeParams.orientationType)
+                {
+                    this.position.x = -newPosition.x//-50;
+                    this.position.y = -newPosition.y//-50;
+                }
+                else {
+                    this.position.x = newPosition.x//-50;
+                    this.position.y = newPosition.y//-50;
+                }
             }
         }
     }

@@ -103,7 +103,7 @@ gsProto.create = function(){
 }
 
 gsProto.createStage = function(){
-    this.gameStage = new PIXI.Stage();
+    this.gameStage = new PIXI.Stage(0x0000FF,true);
     this.gameStage.setBackgroundColor(0x0000FF);
 }
 
@@ -118,7 +118,7 @@ gsProto.addElementsToStage = function(){
 
 gsProto.run = function(){
 
-    this.renderer = new PIXI.CanvasRenderer(this.deviceWidth, this.deviceHeight);//
+    this.renderer = new PIXI.autoDetectRenderer(this.deviceWidth, this.deviceHeight,{view:null, transparent:false, antialias:false, preserveDrawingBuffer:false, resolution:window.devicePixelRatio, clearBeforeRender:true});//
     this.resize();
     document.body.appendChild(this.renderer.view);
 

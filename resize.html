@@ -216,15 +216,28 @@ gsProto.createTableElement = function(){
     tableSprite.anchor.y = 0.5
 
     this.tableElement.addChild(tableSprite)
-    this.addElementsToGameContainer(this.tableElement,0)
+
+    this.tableElement.resizeFunc = function(resizeParams){
+        if(resizeParams.orientationType)
+        {
+            this.rotation = 3.15;
+        }
+        else {
+            this.rotation = 0;
+        }
+    }
+
+    this.addElementsToGameContainer(this.tableElement,0);
+    console.log(this.tableElement)
+    this.elemetsArray.push(this.tableElement)
 }
 
 gsProto.createChipElement = function(){
 
     this.chipElement = new PIXI.Sprite.fromImage("./img/chip_blue_big_1.png");
 
-    this.chipElement.scale.x = 1.5;
-    this.chipElement.scale.y = 1.5;
+    this.chipElement.scale.x = 1.1;
+    this.chipElement.scale.y = 1.1;
 
     this.chipElement.anchor.x = 0.5;
     this.chipElement.anchor.y = 0.5;
@@ -244,11 +257,11 @@ gsProto.createChipElement = function(){
         if(resizeParams.orientationType)
         {
             this.position.x = 230;
-            this.position.y = -300;
+            this.position.y = -170;
             this.rotation = -1.57;
         }
         else {
-            this.position.x = 240;
+            this.position.x = 200;
             this.position.y = 300;
             this.rotation = 0;
         }
@@ -679,18 +692,79 @@ gsProto.createPotButtons = function(){
 gsProto.createUsers = function(){
 
     var users =[
-        {p:{
-            rotation : 0,
-            anchor : {x : 0.5, y : 0.5},
-            position : {y : 300,x : 0}
+        {
+            p:{
+                rotation : 0,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 300,x : 0}
+            },
+            l:{
+                rotation : -1.57,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 0,x : 220}
+            }
         },
-        l:{
-            rotation : -1.57,
-            anchor : {x : 0.5, y : 0.5},
-            position : {y : 0,x : 220}
+        {
+            p:{
+                rotation : 0,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 130,x : 250}
+            },
+            l:{
+                rotation : -1.57,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : -300,x : 130}
+            }
+        },
+        {
+            p:{
+                rotation : 0,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : -130,x : 250}
+            },
+            l:{
+                rotation : -1.57,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : -300,x : -130}
+            }
+        },
+        {
+            p:{
+                rotation : 0,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : -300,x : 0}
+            },
+            l:{
+                rotation : -1.57,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 0,x : -235}
+            }
+        },
+        {
+            p:{
+                rotation : 0,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 130,x : -250}
+            },
+            l:{
+                rotation : -1.57,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 275,x : 130}
+            }
+        },
+        {
+            p:{
+                rotation : 0,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : -130,x : -250}
+            },
+            l:{
+                rotation : -1.57,
+                anchor : {x : 0.5, y : 0.5},
+                position : {y : 275,x : -130}
+            }
         }
 
-        }
     ];
 
     for(var i = 0; i<users.length;i++){
@@ -703,12 +777,17 @@ gsProto.createUsers = function(){
 gsProto.createUser = function(userJson,i){
 //    for(var i = 0; i<usersJson.length;i++){
     this["plateBaseSprite"+i] = new PIXI.Sprite.fromImage("./img/plate_base.png");
-
+    this["plateBaseSprite"+i].scale.x = 0.85;
+    this["plateBaseSprite"+i].scale.y = 0.85;
 
 
     var timer = new PIXI.Sprite.fromImage("./img/plate_timer.png");
     timer.anchor.x = 0.5
     timer.anchor.y = 0.5
+
+    var platePlayer = new PIXI.Sprite.fromImage("./img/plate_player.png");
+    platePlayer.anchor.x = 0.5
+    platePlayer.anchor.y = 0.5
 
     var chipBet = new PIXI.Sprite.fromImage("./img/chips_white_small_2.png");
     chipBet.anchor.x = 0.5

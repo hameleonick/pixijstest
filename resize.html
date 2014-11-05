@@ -164,6 +164,7 @@ gsProto.run = function(){
     requestAnimationFrame(animate);
 
     function animate() {
+        meter.tickStart();
         self.renderer.render(self.gameStage);
         requestAnimationFrame(animate);
         if(self.benchmarkElements.length)

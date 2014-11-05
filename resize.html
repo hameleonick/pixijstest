@@ -51,7 +51,8 @@ var assets=[
     "./img/slider/slider_minus_down.png",
     "./img/slider/slider_plus_down.png",
     "./img/chips_white_small_2.png",
-    "./img/plate_timer.png"
+    "./img/plate_timer.png",
+    "./img/pot0.png"
 ];
 
 var assetLoader=new PIXI.AssetLoader(assets);
@@ -76,7 +77,10 @@ gsProto.initialize = function(){
     this.sliderPlusSprite = null;
     this.sliderCenterSprite = null;
     this.sliderButton = null;
+    this.menuButton = null;
+    this.topMenuBlackSprite = null;
 
+    this.potSprite = null;
     this.potbet50Sprite = null;
     this.potbet75Sprite = null;
     this.potbet100Sprite = null;
@@ -92,7 +96,7 @@ gsProto.create = function(){
     this.createChipElement();
     this.createPotButtons();
     this.createUsers();
-
+    this.createTopMenu();
 
 
 
@@ -103,8 +107,8 @@ gsProto.create = function(){
 }
 
 gsProto.createStage = function(){
-    this.gameStage = new PIXI.Stage(0x0000FF,true);
-    this.gameStage.setBackgroundColor(0x0000FF);
+    this.gameStage = new PIXI.Stage(0xCCCCCC,true);
+    this.gameStage.setBackgroundColor(0xCCCCCC);
 }
 
 gsProto.addElementsToStage = function(){
@@ -113,6 +117,8 @@ gsProto.addElementsToStage = function(){
     this.gameStage.addChildAt(this.sliderPlusSprite, 1);
     this.gameStage.addChildAt(this.sliderCenterSprite, 1);
     this.gameStage.addChildAt(this.sliderButton,2);
+    this.gameStage.addChildAt(this.topMenuBlackSprite,1);
+    this.gameStage.addChildAt(this.menuButton,2);
     ///this.gameStage.addChildAt(this.chipElement,1);
 }
 
@@ -623,12 +629,38 @@ gsProto.createSliderButton = function(){
 }
 
 gsProto.createPotButtons = function(){
-    this.potbet50Sprite = new PIXI.Sprite.fromImage("./img/potbet_50.png");
 
+    var self = this;
+    this.potSprite = new PIXI.Sprite.fromImage("./img/pot0.png");
+    this.potSprite.interactive = true;
+    this.potSprite.buttonMode = true;
+    this.potSprite.resizeFunc = function(resizeParams){
+        this.anchor.x = 0.5;
+        this.anchor.y = 0.5;
+
+        if(resizeParams.orientationType){
+            this.rotation = -1.57;
+            this.position.x = -120;
+            this.position.y = 0;
+        }
+        else{
+            this.rotation = 0;
+            this.position.x = 0;
+            this.position.y = -120;
+        }
+    }
+
+    this.potbet50Sprite = new PIXI.Sprite.fromImage("./img/potbet_50.png");
+    this.potbet50Sprite.interactive = true;
+    this.potbet50Sprite.buttonMode = true;
 
     this.potbet75Sprite = new PIXI.Sprite.fromImage("./img/potbet_75.png");
+    this.potbet75Sprite.interactive = true;
+    this.potbet75Sprite.buttonMode = true;
 
     this.potbet100Sprite = new PIXI.Sprite.fromImage("./img/potbet_100.png");
+    this.potbet100Sprite.interactive = true;
+    this.potbet100Sprite.buttonMode = true;
 
     this.potbet50Sprite.resizeFunc = function(resizeParams){
         this.anchor.x = 0.5;
@@ -636,7 +668,7 @@ gsProto.createPotButtons = function(){
         if(resizeParams.orientationType){
             this.rotation = -1.57;
             this.position.x = -100;
-            this.position.y = 120;
+            this.position.y = 150;
         }
         else{
             this.rotation = 0;
@@ -653,7 +685,7 @@ gsProto.createPotButtons = function(){
         {
             this.rotation = -1.57;
             this.position.x = -100;
-            this.position.y = -10;
+            this.position.y = 5;
         }
         else{
             this.rotation = 0;
@@ -678,15 +710,57 @@ gsProto.createPotButtons = function(){
         }
     }
 
+    this.potSprite.showBigPotBetButtons = function () {
+        this.visible = false;
+        self.potbet50Sprite.visible = true;
+        self.potbet75Sprite.visible = true;
+        self.potbet100Sprite.visible = true;
+    }
+
+    this.potSprite.hideBigPotBetButtons = function () {
+        self.potbet50Sprite.visible = false;
+        self.potbet75Sprite.visible = false;
+        self.potbet100Sprite.visible = false;
+        this.visible = true;
+    }
+
+    this.potSprite.hideBigPotBetButtons();
+
+    this.potSprite.addEventListeners = function(){
+        var thisObj = this;
+        this.mousedown = this.touchstart = function(data)
+        {
+            thisObj.showBigPotBetButtons();
+        }
+    }
+
+    var potBetFunction = function(){
+
+        this.mousedown = this.touchstart = function(data)
+        {
+            self.potSprite.hideBigPotBetButtons();
+        }
+
+    }
+
+    this.potbet50Sprite.addEventListeners = potBetFunction;
+    this.potbet75Sprite.addEventListeners = potBetFunction;
+    this.potbet100Sprite.addEventListeners = potBetFunction;
+
     this.elemetsArray.push(this.potbet50Sprite);
     this.elemetsArray.push(this.potbet75Sprite);
     this.elemetsArray.push(this.potbet100Sprite);
+    this.elemetsArray.push(this.potSprite);
 
+    this.addElementsToGameContainer(this.potSprite,1);
     this.addElementsToGameContainer(this.potbet50Sprite,1)
     this.addElementsToGameContainer(this.potbet75Sprite,1)
     this.addElementsToGameContainer(this.potbet100Sprite,1)
 
-
+    this.potSprite.addEventListeners();
+    this.potbet50Sprite.addEventListeners();
+    this.potbet75Sprite.addEventListeners();
+    this.potbet100Sprite.addEventListeners();
 }
 
 gsProto.createUsers = function(){
@@ -702,7 +776,10 @@ gsProto.createUsers = function(){
                 rotation : -1.57,
                 anchor : {x : 0.5, y : 0.5},
                 position : {y : 0,x : 220}
-            }
+            },
+            timer: {visible: true},
+            chip:{visible:false, value:10},
+            name:"crazycashpay"
         },
         {
             p:{
@@ -714,7 +791,10 @@ gsProto.createUsers = function(){
                 rotation : -1.57,
                 anchor : {x : 0.5, y : 0.5},
                 position : {y : -300,x : 130}
-            }
+            },
+            timer: {visible: false},
+            chip:{visible:true, value:100},
+            name:"John"
         },
         {
             p:{
@@ -726,7 +806,10 @@ gsProto.createUsers = function(){
                 rotation : -1.57,
                 anchor : {x : 0.5, y : 0.5},
                 position : {y : -300,x : -130}
-            }
+            },
+            timer: {visible: false},
+            chip:{visible:true, value:100},
+            name:"David"
         },
         {
             p:{
@@ -738,7 +821,10 @@ gsProto.createUsers = function(){
                 rotation : -1.57,
                 anchor : {x : 0.5, y : 0.5},
                 position : {y : 0,x : -235}
-            }
+            },
+            timer: {visible: false},
+            chip:{visible:false, value:10},
+            name:"Randy"
         },
         {
             p:{
@@ -750,7 +836,10 @@ gsProto.createUsers = function(){
                 rotation : -1.57,
                 anchor : {x : 0.5, y : 0.5},
                 position : {y : 275,x : 130}
-            }
+            },
+            timer: {visible: false},
+            chip:{visible:false, value:10},
+            name:"Smith"
         },
         {
             p:{
@@ -762,13 +851,16 @@ gsProto.createUsers = function(){
                 rotation : -1.57,
                 anchor : {x : 0.5, y : 0.5},
                 position : {y : 275,x : -130}
-            }
+            },
+            timer: {visible: false},
+            chip:{visible:false, value:10},
+            name:"Lee"
         }
 
     ];
 
     for(var i = 0; i<users.length;i++){
-        this.createUser(users[i]);
+        this.createUser(users[i],i);
     }
 
 
@@ -777,13 +869,22 @@ gsProto.createUsers = function(){
 gsProto.createUser = function(userJson,i){
 //    for(var i = 0; i<usersJson.length;i++){
     this["plateBaseSprite"+i] = new PIXI.Sprite.fromImage("./img/plate_base.png");
-    this["plateBaseSprite"+i].scale.x = 0.85;
-    this["plateBaseSprite"+i].scale.y = 0.85;
+    this["plateBaseSprite"+i].scale.x = 1;
+    this["plateBaseSprite"+i].scale.y = 1;
 
 
     var timer = new PIXI.Sprite.fromImage("./img/plate_timer.png");
     timer.anchor.x = 0.5
     timer.anchor.y = 0.5
+    if(!userJson.timer.visible)
+        timer.visible = false;
+    this["plateBaseSprite"+i].showTimer = function(){
+        timer.visible = true;
+    }
+
+    this["plateBaseSprite"+i].hideTimer = function(){
+        timer.visible = false;
+    }
 
     var platePlayer = new PIXI.Sprite.fromImage("./img/plate_player.png");
     platePlayer.anchor.x = 0.5
@@ -793,22 +894,34 @@ gsProto.createUser = function(userJson,i){
     chipBet.anchor.x = 0.5
     chipBet.anchor.y = 1;
 
-    var chipAmount = new PIXI.Text("10", {fill:"black",font:" 20pt Arial"})
+    if(!userJson.chip.visible)
+        chipBet.visible = false;
+
+    this["plateBaseSprite"+i].showChipBet = function(){
+        chipBet.visible = true;
+    }
+
+    this["plateBaseSprite"+i].hideChipBet = function(){
+        chipBet.visible = false;
+    }
+
+    var chipAmount = new PIXI.Text(userJson.chip.value, {fill:"black",font:" 20pt Arial"})
     chipAmount.anchor.x = 0.5;
     chipAmount.anchor.y = 0;
     chipAmount.position.y = -40;
     chipBet.addChild(chipAmount)
 
-    var userName = new PIXI.Text("userName", {fill:"red",font:"15pt  Arial"})
+    var userName = new PIXI.Text(userJson.name, {fill:"red",font:"15pt  Arial"})
     userName.anchor.x = 0.5;
     userName.anchor.y = 0;
     userName.position.y = 5;
 
-    var playerAmount = new PIXI.Text("150", {fill:"white",font:"15pt  Arial"})
+    var playerAmount = new PIXI.Text(userJson.chip.value, {fill:"white",font:"15pt  Arial"})
     playerAmount.anchor.x = 0.5;
     playerAmount.anchor.y = 0;
     playerAmount.position.y = 30;
 
+    this["plateBaseSprite"+i].addChild(platePlayer);
     this["plateBaseSprite"+i].addChild(timer);
     this["plateBaseSprite"+i].addChild(chipBet);
     this["plateBaseSprite"+i].addChild(userName);
@@ -834,12 +947,65 @@ gsProto.createUser = function(userJson,i){
 //    }
 }
 
+gsProto.createTopMenu = function(){
+    this.topMenuBlackSprite = new PIXI.Sprite.fromImage("./img/slider/slider_back.png");
+
+    this.menuButton = new PIXI.Sprite.fromImage("./img/menu.png");
+
+    this.menuButton.resizeFunc = function(resizeParams){
+
+        if(resizeParams.orientationType)
+        {
+            this.visible = false;
+        }
+        else
+        {
+            this.visible = true;
+
+            this.position.x = 0
+            this.position.y = 0
+            this.anchor.x = -0.3;
+            this.anchor.y = -0.7;
+            this.scale.x = 1.5*resizeParams.scaleDeltaMin;
+            this.scale.y = 1.5*resizeParams.scaleDeltaMin;
+        }
+
+    }
+    this.topMenuBlackSprite.resizeFunc = function(resizeParams){
+        if(resizeParams.orientationType)
+        {
+            this.visible = false;
+        }
+        else
+        {
+            this.position.x = 0
+            this.position.y = 0
+            this.anchor.x = 0;
+            this.anchor.y = 0;
+            this.visible = true;
+
+            this.scale.x = Math.ceil(resizeParams.deviceWidth)/this.texture.width
+            this.scale.y = resizeParams.scaleDeltaMin
+        }
+    }
+
+    this.elemetsArray.push(this.topMenuBlackSprite);
+    this.elemetsArray.push(this.menuButton);
+}
+
+gsProto.show = function(){
+    this.visible = true;
+}
+
+gsProto.hide = function(){
+    this.visible = false;
+}
 
 
 assetLoader.addEventListener("onComplete",function(e){
     console.log("done");
     console.log(e);
-    var game = new GameScreen();
+    window.game = new GameScreen();
     game.create();
     game.run();
     //runGame();
